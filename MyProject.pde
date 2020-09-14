@@ -195,13 +195,58 @@ void showPart4(ARROW A, ARROW B) //
   }
 
  //====================================================================== PART 5
-void showPart5(ARROW A, ARROW B) //
-  {
-  PartTitle[5] = "five?";
+void showPart5(ARROW A, ARROW B) {
+  PartTitle[5] = "Pendulum";
+  easeInOut = false;
 
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
   show(A,dred); show(B,blue);
-  }
+  
+  // Compute pivot position
+  float angleAB = abs(angle(A.rV(), B.rV()));
+  PNT ATail = A.rP();
+  PNT BTail = B.rP();
+  ARROW C = new ARROW(ATail, BTail);
+  float angleBC = abs(angle(B.rV(), C.rV()));
+  float distPivotToA = C.rm() / sin(angleAB) * sin(angleBC);
+  float angleAC = abs(angle(A.rV(), C.rV()));
+  float distPivotToB = C.rm() / sin(angleAB) * sin(angleAC);
+  VCT reversedAVec = V(-distPivotToA / A.rm(), A.rV());
+  PNT pivot = P(A.rP(), reversedAVec);
+  circledLabel(pivot, "P");
+  
+  VCT verticalVec = new VCT(0, 1000);
+  float angleASwing = abs(angle(A.rV(), verticalVec));
+  float angleBSwing = abs(angle(B.rV(), verticalVec));
+  
+  float maxSwing = max(angleASwing, angleBSwing);
+  float swingAtTime = maxSwing * cos(PI * currentTime);
+  ARROW pendulum = new ARROW(pivot, R(verticalVec, swingAtTime));
+  
+  PNT pendulumEnd = P(pivot, pendulum.rV());
+  stroke(240);
+  line(pivot.x, pivot.y, pendulumEnd.x, pendulumEnd.y);
+  
+  // Calculate time when the pendulum sweeps past A or B
+  float timeAtA = acos(angleASwing / maxSwing) / PI;
+  float timeAtB = acos(-angleBSwing / maxSwing) / PI;
+  
+  // Calculate the speed that the distance from pivot to the tail of arrow changes
+  float distPivotToArrowSpeed = (distPivotToA - distPivotToB) / (timeAtA - timeAtB);
+  float initialDist = distPivotToA - distPivotToArrowSpeed * timeAtA;
+  float currentDist = initialDist + distPivotToArrowSpeed * currentTime;
+  
+  // Calculate the speed that arrow magnitude changes
+  float magnitudeSpeed = (A.rm() - B.rm()) / (timeAtA - timeAtB);
+  float initialMagnitude = A.rm() - magnitudeSpeed * timeAtA;
+  float currentMagnitude = initialMagnitude + magnitudeSpeed * currentTime;
+  
+  VCT pivotToArrowVec = R(new VCT(0, currentDist), swingAtTime);
+  PNT interpolatedTail = P(pivot, pivotToArrowVec);
+  VCT interpolatedVec = V(currentMagnitude / currentDist, pivotToArrowVec);
+  ARROW interpolatedArrow = new ARROW(interpolatedTail, interpolatedVec);
+  show(interpolatedArrow, black);
+}
 
  //====================================================================== PART 6
 void showPart6(ARROW A, ARROW B) //
