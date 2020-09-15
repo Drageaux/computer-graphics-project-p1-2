@@ -279,11 +279,34 @@ void showPart5(ARROW A, ARROW B) {
  //====================================================================== PART 6
 void showPart6(ARROW ArrowLeft, ARROW ArrowRight) //
   {
-  PartTitle[6] = "six?";
+  PartTitle[6] = "Ball Rolling";
+  // simulate a ball rolling
   
+  PNT A = ArrowLeft.rP(),  B = ArrowLeft.rQ(),
+  D = ArrowRight.rP(), C = ArrowRight.rQ();
+  
+  cwF(orange,6);
+  circledLabel(A,"A"); circledLabel(D,"D");
+  circledLabel(B,"B"); circledLabel(C,"C"); 
+  
+  ARROW At  = ballSpinningMorph(ArrowLeft,ArrowRight,myTime);   show(At,blue); // My Animation
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
   show(ArrowLeft,dred); show(ArrowRight,blue);
   }
+  
+ARROW ballSpinningMorph(ARROW A0, ARROW A1, float t){
+  float w = A1.ra() - A0.ra();
+  float m = A1.rm() / A0.rm();
+  PNT P0 = A0.rP(), P1 = A1.rP();
+  
+  float mt = pow(m,t);
+  float wt = (t)*(w);
+  PNT Pt;
+  
+  Pt = L(P0,t,P1);
+
+  return Arrow(Pt,mt*A0.rm(),A0.ra()+wt);
+}
 
  //====================================================================== PART 7
 void showPart7(ARROW A, ARROW B) //
