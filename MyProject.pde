@@ -320,52 +320,52 @@ void showPart7(ARROW A, ARROW B) //
  //====================================================================== PART 8
 void showPart8(ARROW ArrowLeft, ARROW ArrowRight) //
   {
-  PartTitle[8] = "?";
+  PartTitle[8] = "Spiral Staircase's Handrailing";
   PNT A = ArrowLeft.rP(),  B = ArrowLeft.rQ(), 
   D = ArrowRight.rP(), C = L(D,-1,ArrowRight.rQ());
   cwF(orange,6);
   
   
-  
+  // separate the staircase into quads for the sake of demonstration
   ARROW Arrow025  = ArrowPolarMorph(ArrowLeft,ArrowRight,0.25);   show(Arrow025,myColors[0]);
+  ARROW Arrow050  = ArrowPolarMorph(ArrowLeft,ArrowRight,0.50);   show(Arrow050,green);
+  ARROW Arrow075  = ArrowPolarMorph(ArrowLeft,ArrowRight,0.75);   show(Arrow075,myColors[2]);
+  
+  // each arrow becomes the reference arrow for the next iteration
   PNT A025 = ArrowLeft.rP(),  B025 = ArrowLeft.rQ(), 
   D025 = Arrow025.rP(), C025 = L(D025,-1,Arrow025.rQ());
   
-  ARROW Arrow050  = ArrowPolarMorph(ArrowLeft,ArrowRight,0.50);   show(Arrow050,green);
   PNT A050 = Arrow025.rP(),  B050 = Arrow025.rQ(), 
   D050 = Arrow050.rP(), C050 = L(D050,-1,Arrow050.rQ());
   
-  ARROW Arrow075  = ArrowPolarMorph(ArrowLeft,ArrowRight,0.75);   show(Arrow075,myColors[2]);
   PNT A075 = Arrow050.rP(),  B075 = Arrow050.rQ(), 
   D075 = Arrow075.rP(), C075 = L(D075,-1,Arrow075.rQ());
   
   PNT A100 = Arrow075.rP(),  B100 = Arrow075.rQ(), 
   D100 = ArrowRight.rP(), C100 = L(D100,-1,ArrowRight.rQ());
   
-  //ARROW At  = ArrowPolarMorph(ArrowLeft,ArrowRight,myTime);   show(At,blue); // My Animation
   beginShape();
   for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A025,B025,C025,D025,s));
   for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A050,B050,C050,D050,s));
   for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A075,B075,C075,D075,s));
   for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A100,B100,C100,D100,s));
   endShape();
-  println("myTime: ", myTime);
-  //show(drawBezierArrow(A025,B025,C025,D025,myTime),dgreen);
-  if(0<=myTime && myTime<0.25) {
-  }
-    show(drawBezierArrow(A025,B025,C025,D025,myTime),dgreen);
   
-  if(0.25<=myTime && myTime<0.50) {
-    show(drawBezierArrow(A050,B050,C050,D050,myTime),dgreen);
+  // limitation: drawBezierArrow as a function of max time = 1, 
+  // so we need to split up the animation in quarter seconds at a time 
+  if(myTime>0 && myTime<=0.25) {
+    show(drawBezierArrow(A025,B025,C025,D025,myTime*4),dgreen);
+  }
+  if(myTime>0.25 && myTime<=0.50) {
+    show(drawBezierArrow(A050,B050,C050,D050,(myTime-0.25)*4),dgreen);
+  }
+  if(myTime>0.50 && myTime<=0.75) {
+    show(drawBezierArrow(A075,B075,C075,D075,(myTime-0.50)*4),dgreen);
+  }
+  if(myTime>0.75 && myTime<=1) {
+    show(drawBezierArrow(A100,B100,C100,D100,(myTime-0.75)*4),dgreen);
   }
   
-  if(0.50<=myTime && myTime<0.75) {
-    show(drawBezierArrow(A075,B075,C075,D075,myTime),dgreen);
-  }
-  
-  if(0.75<=myTime && myTime<1) {
-    show(drawBezierArrow(A100,B100,C100,D100,myTime),dgreen);
-  }
   show(ArrowLeft,dred); show(ArrowRight,blue);
   circledLabel(A,"A"); circledLabel(D,"D");
   circledLabel(B,"B"); circledLabel(C,"C");
