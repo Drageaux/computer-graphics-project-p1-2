@@ -321,11 +321,80 @@ void showPart7(ARROW A, ARROW B) //
 void showPart8(ARROW ArrowLeft, ARROW ArrowRight) //
   {
   PartTitle[8] = "?";
-  PNT A = ArrowLeft.rP(),  B = ArrowLeft.rQ(), D = ArrowRight.rP(), C = ArrowRight.rQ();
-
+  PNT A = ArrowLeft.rP(),  B = ArrowLeft.rQ(), 
+  D = ArrowRight.rP(), C = L(D,-1,ArrowRight.rQ());
+  cwF(orange,6);
+  
+  
+  
+  ARROW Arrow025  = ArrowPolarMorph(ArrowLeft,ArrowRight,0.25);   show(Arrow025,myColors[0]);
+  PNT A025 = ArrowLeft.rP(),  B025 = ArrowLeft.rQ(), 
+  D025 = Arrow025.rP(), C025 = L(D025,-1,Arrow025.rQ());
+  
+  ARROW Arrow050  = ArrowPolarMorph(ArrowLeft,ArrowRight,0.50);   show(Arrow050,green);
+  PNT A050 = Arrow025.rP(),  B050 = Arrow025.rQ(), 
+  D050 = Arrow050.rP(), C050 = L(D050,-1,Arrow050.rQ());
+  
+  ARROW Arrow075  = ArrowPolarMorph(ArrowLeft,ArrowRight,0.75);   show(Arrow075,myColors[2]);
+  PNT A075 = Arrow050.rP(),  B075 = Arrow050.rQ(), 
+  D075 = Arrow075.rP(), C075 = L(D075,-1,Arrow075.rQ());
+  
+  PNT A100 = Arrow075.rP(),  B100 = Arrow075.rQ(), 
+  D100 = ArrowRight.rP(), C100 = L(D100,-1,ArrowRight.rQ());
+  
+  //ARROW At  = ArrowPolarMorph(ArrowLeft,ArrowRight,myTime);   show(At,blue); // My Animation
+  beginShape();
+  for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A025,B025,C025,D025,s));
+  for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A050,B050,C050,D050,s));
+  for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A075,B075,C075,D075,s));
+  for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A100,B100,C100,D100,s));
+  //for(float s=0.26; s<0.51; s+=0.02) v(PointOnBezierCurve(A,B,C,D,s));
+  //for(float s=0.51; s<0.76; s+=0.02) v(PointOnBezierCurve(A,B,C,D,s));
+  //for(float s=0.76; s<1.01; s+=0.02) v(PointOnBezierCurve(A,B,C,D,s));
+  endShape();
+  println("myTime: ", myTime);
+  //show(drawBezierArrow(A025,B025,C025,D025,myTime),dgreen);
+  if(0<=myTime && myTime<0.25) {
+    show(drawBezierArrow(A025,B025,C025,D025,myTime),dgreen);
+  }
+  
+  if(0.25<=myTime && myTime<0.50) {
+    show(drawBezierArrow(A050,B050,C050,D050,myTime),dgreen);
+  }
+  
+  if(0.50<=myTime && myTime<0.75) {
+    show(drawBezierArrow(A075,B075,C075,D075,myTime),dgreen);
+  }
+  
+  if(0.75<=myTime && myTime<1) {
+    show(drawBezierArrow(A100,B100,C100,D100,myTime),dgreen);
+  }
   show(ArrowLeft,dred); show(ArrowRight,blue);
-  circledLabel(A,"A"); circledLabel(B,"B"); circledLabel(C,"C"); circledLabel(D,"D");
+  circledLabel(A,"A"); circledLabel(D,"D");
+  circledLabel(B,"B"); circledLabel(C,"C");
+  
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
+  }
+  
+PNT  PointOnBezierCurve(PNT A, PNT B, PNT C, PNT D, float t)
+  {
+  PNT Pab = L(A, t, B); // ab = lerp of A to B at time t
+  PNT Pbc = L(B, t, C);
+  PNT Pcd = L(C, t, D);
+  PNT Pabc = L(Pab, t, Pbc);
+  PNT Pbcd = L(Pbc, t, Pcd);
+  PNT P = L(Pabc, t, Pbcd);
+  return P;
+  }
+  
+ARROW  drawBezierArrow(PNT A, PNT B, PNT C, PNT D, float t)
+  {
+  PNT Pbc = L(B, t, C);
+  PNT Pcd = L(C, t, D);
+  PNT Pbcd = L(Pbc, t, Pcd);
+  PNT P = PointOnBezierCurve(A,B,C,D,t);
+  ARROW arrow = Arrow(P, Pbcd);
+  return arrow;                    
   }
 
   
