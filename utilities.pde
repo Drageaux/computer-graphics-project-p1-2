@@ -230,7 +230,6 @@ void writeWrappedText(String S, PNT P, int fontSize, int w)
    }
 
 // *********************************************************** TIME WARP: EASE-IN/OUT INTERPOLATING 3 VALUES
-boolean easeInOut=true;
 float easeInOut( float a, float b, float c, float t)
    {
    return

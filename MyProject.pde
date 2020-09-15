@@ -10,10 +10,14 @@ PImage PictureOfBanner; // picture of banner, should be: data/pic.jpg in sketch 
 
 boolean lerp=true, spiral=true; // toggles to display vector interpoations
 float b=0, c=0.5, d=1; // initial knots
-int partShown = 0;
 //String [] PartTitle = new String[10];
 String [] PartTitle = {"?","?","?","?","?","?","?","?","?","?"};
+int partShown = 0;
 
+// My Animation
+int MyFramesInAnimation=31;
+int myCurrentFrame=0; // counting frames for animating my arrow morphs 
+float myTime=0; // my time for animating my arrow morphs 
 
 int numberOfParts = PartTitle.length;
 PNTS DrawnPoints = new PNTS(); // class containing array of points, used to standardize GUI
@@ -25,6 +29,9 @@ String title = "Class: 6491, Year: 2020, Project 01",
        name = "Chen LIU";
 String subtitle = "Playing with ARROWS";    
 String guide="MyProject keys: '0' through '9' to select project parts, 'a' to start/stop animation "; // help info
+
+//**************************** Color Ramp  ****************************
+COLOR_RAMP colors = new COLOR_RAMP(65);
 
 //======================= my setup, executed once at the beginning 
 void mySetup()
@@ -39,6 +46,10 @@ void mySetup()
 //======================= called in main() and executed at each frame to redraw the canvas
 void showMyProject(ARROW A, ARROW B) // four points used to define 3 vectors
   {
+  if(myCurrentFrame==MyFramesInAnimation) myCurrentFrame=0;
+  myTime = (float)myCurrentFrame++/MyFramesInAnimation;
+  if(easeInOut) myTime = easeInOut(0,0.5,1,myTime);    
+
   if(0<=partShown && partShown<numberOfParts)
     {
     switch(partShown) 
@@ -61,31 +72,27 @@ void showMyProject(ARROW A, ARROW B) // four points used to define 3 vectors
 void showPart0(ARROW A, ARROW B) //
   {
   PartTitle[0] = "Experimenting sandbox";
-
-  ARROW A025  = SAM(A,B,0.25);   show(A025,myColors[0]);
-  ARROW A050  = SAM(A,B,0.50);   show(A050,green);
-  ARROW A075  = SAM(A,B,0.75);   show(A075,myColors[2]);
-
+  ARROW A025  = ArrowSteadyMorph(A,B,0.25);   show(A025,myColors[0]);
+  ARROW A050  = ArrowSteadyMorph(A,B,0.50);   show(A050,green);
+  ARROW A075  = ArrowSteadyMorph(A,B,0.75);   show(A075,myColors[2]);
+  ARROW At  = ArrowSteadyMorph(A,B,myTime);   show(At,blue); // My Animation
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
   show(A,dred); show(B,blue);
   }
 
 //====================================================================== PART 1
-void showPart1(ARROW A, ARROW B) {
-  PartTitle[1] = "Linear Morph of Arrows (LMoA)";
-  showLinearPatternOfArrows(A, B, 31);
-  ARROW A25 = ArrowLinearMorph(A, B, 0.25);
-  show(A25, black);
-  ARROW A50 = ArrowLinearMorph(A, B, 0.5);
-  show(A50, green);
-  ARROW A75 = ArrowLinearMorph(A, B, 0.75);
-  show(A75, blue);
-  ARROW At = ArrowLinearMorph(A, B, currentTime);
-  show(At, yellow);
+void showPart1(ARROW A, ARROW B) //
+  {
+  PartTitle[1] = "Linear Arrow Morph (LAM)";
+  showLinearPatternOfArrows(A, B, MyFramesInAnimation+1);
+  ARROW A025  = ArrowLinearMorph(A,B,0.25);   show(A025,myColors[0]);
+  ARROW A050  = ArrowLinearMorph(A,B,0.50);   show(A050,green);
+  ARROW A075  = ArrowLinearMorph(A,B,0.75);   show(A075,myColors[2]);
+  ARROW At  = ArrowLinearMorph(A,B,myTime);   show(At,blue); // My Animation
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
   show(A,dred); show(B,blue);
-}
-
+  }
+  
 void showLinearPatternOfArrows(ARROW A, ARROW B, int quads) {
   cwf(black,2,cyan);
   beginShape(QUAD_STRIP); 
@@ -102,52 +109,45 @@ void showLinearPatternOfArrows(ARROW A, ARROW B, int quads) {
 }
   
 //====================================================================== PART 2
-void showPart2(ARROW A, ARROW B) {
-  PartTitle[2] = "Steady Morph of Arrows (SMoA)";
-  showSAMPatternOfArrows(A, B, 31);
-  ARROW A25 = ArrowSteadyMorph(A, B, 0.25);
-  show(A25, black);
-  ARROW A50 = ArrowSteadyMorph(A, B, 0.5);
-  show(A50, green);
-  ARROW A75 = ArrowSteadyMorph(A, B, 0.75);
-  show(A75, blue);
-  ARROW At = ArrowSteadyMorph(A, B, currentTime);
-  show(At, yellow);
+void showPart2(ARROW A, ARROW B) //
+  {
+  PartTitle[2] = "Steady Arrow Morph (SAM)";
+  showSteadyPatternOfArrows(A, B, MyFramesInAnimation+1);
+  // My Animation
+  ARROW A025  = ArrowSteadyMorph(A,B,0.25);   show(A025,myColors[0]);
+  ARROW A050  = ArrowSteadyMorph(A,B,0.50);   show(A050,green);
+  ARROW A075  = ArrowSteadyMorph(A,B,0.75);   show(A075,myColors[2]);
+  ARROW At  = ArrowSteadyMorph(A,B,myTime);   show(At,blue); // My Animation
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
   show(A,dred); show(B,blue);
-}
- 
-void showSAMPatternOfArrows(ARROW A, ARROW B, int quads) {
-  cwf(black, 2, cyan);
+  }
+void showSteadyPatternOfArrows(ARROW A, ARROW B,int quads)
+  {
+  cwf(black,2,cyan);
   beginShape(QUAD_STRIP); 
   for(int f=0; f<=quads; f++)
       {
       float s=(float)f/quads; 
-      ARROW N =  SAM(A,B,s); 
-      PNT rP = N.rP();
-      PNT rQ = N.rQ();
-      v(rP);
-      v(rQ);
+      ARROW N =  ArrowSteadyMorph(A,B,s); 
+      v(N.rP());
+      v(N.rQ());
       }
   endShape();
-}
-
+  }
+  
 //====================================================================== PART 3
-void showPart3(ARROW A, ARROW B) {
-  PartTitle[3] = "Polar Morph of Arrows";
-  showPolarPatternOfArrows(A, B, 31);
-  ARROW A25 = ArrowPolarMorph(A, B, 0.25);
-  show(A25, black);
-  ARROW A50 = ArrowPolarMorph(A, B, 0.5);
-  show(A50, green);
-  ARROW A75 = ArrowPolarMorph(A, B, 0.75);
-  show(A75, blue);
-  ARROW At = ArrowPolarMorph(A, B, currentTime);
-  show(At, yellow);
+void showPart3(ARROW A, ARROW B) // You may use a different solution here
+  {
+  PartTitle[3] = "Polar Arrow Morph (PAM)";
+  showPolarPatternOfArrows(A, B, MyFramesInAnimation+1);
+  // My Animation
+  ARROW A025  = ArrowPolarMorph(A,B,0.25);   show(A025,myColors[0]);
+  ARROW A050  = ArrowPolarMorph(A,B,0.50);   show(A050,green);
+  ARROW A075  = ArrowPolarMorph(A,B,0.75);   show(A075,myColors[2]);
+  ARROW At  = ArrowPolarMorph(A,B,myTime);   show(At,blue); // My Animation
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
   show(A,dred); show(B,blue);
-}
-
+  }
 void showPolarPatternOfArrows(ARROW A, ARROW B, int quads) {
   cwf(black, 2, cyan);
   beginShape(QUAD_STRIP); 
@@ -162,10 +162,9 @@ void showPolarPatternOfArrows(ARROW A, ARROW B, int quads) {
       }
   endShape();
 }
-
+  
  //====================================================================== PART 4
-void showPart4(ARROW A, ARROW B) //
-  {
+void showSeashellExtrapolation(ARROW A, ARROW B) {
   PartTitle[4] = "Extrapolate with Two Arrows (Seashell)";
   VCT AVec = A.rV();
   VCT BVec = B.rV();
@@ -192,15 +191,44 @@ void showPart4(ARROW A, ARROW B) //
 
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
   show(A,dred); show(B,blue);
+}
+
+void showPart4(ARROW ArrowLeft, ARROW ArrowRight) // You may use a different solution here
+  {
+  PartTitle[4] = "Perspective recursion";
+  PNT A = ArrowLeft.rP(),  B = ArrowLeft.rQ(), D = ArrowRight.rP(), C = ArrowRight.rQ();
+  cwfo(black,12,grey,50); showLoop(A,B,C,D);
+  cwf(black,2,cyan);
+  beginShape(QUAD_STRIP); 
+  v(A); v(B);
+  showPerspectiveSplitOfQuad(A,B,C,D,4);
+  v(D); v(C);
+  endShape();
+  //ARROW At  = ArrowPerspectiveMorph(A,B,myTime);   show(At,blue); // My Animation
+  // comupting the above is challenging. Maybe approximate it?
+  show(ArrowLeft,dred); show(ArrowRight,blue);
+  circledLabel(A,"A"); circledLabel(B,"B"); circledLabel(C,"C"); circledLabel(D,"D");
+  guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
+  }
+void showPerspectiveSplitOfQuad(PNT A, PNT B, PNT C, PNT D, int rec)
+  {
+  // Please provide if you decide to have this as a solution for PHASE 2
   }
 
  //====================================================================== PART 5
+boolean swingRight = true;
+
 void showPart5(ARROW A, ARROW B) {
   PartTitle[5] = "Pendulum";
-  easeInOut = false;
+  easeInOut = true;
 
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
   show(A,dred); show(B,blue);
+  
+  float currentTime = swingRight ? myTime : 1 - myTime;
+  if (myCurrentFrame == MyFramesInAnimation) {
+    swingRight = !swingRight;
+  }
   
   // Compute pivot position
   float angleAB = abs(angle(A.rV(), B.rV()));
@@ -249,12 +277,12 @@ void showPart5(ARROW A, ARROW B) {
 }
 
  //====================================================================== PART 6
-void showPart6(ARROW A, ARROW B) //
+void showPart6(ARROW ArrowLeft, ARROW ArrowRight) //
   {
   PartTitle[6] = "six?";
-
+  
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
-  show(A,dred); show(B,blue);
+  show(ArrowLeft,dred); show(ArrowRight,blue);
   }
 
  //====================================================================== PART 7
@@ -267,21 +295,23 @@ void showPart7(ARROW A, ARROW B) //
   }
 
  //====================================================================== PART 8
-void showPart8(ARROW A, ARROW B) //
+void showPart8(ARROW ArrowLeft, ARROW ArrowRight) //
   {
-  PartTitle[8] = "eight?";
+  PartTitle[8] = "?";
+  PNT A = ArrowLeft.rP(),  B = ArrowLeft.rQ(), D = ArrowRight.rP(), C = ArrowRight.rQ();
 
+  show(ArrowLeft,dred); show(ArrowRight,blue);
+  circledLabel(A,"A"); circledLabel(B,"B"); circledLabel(C,"C"); circledLabel(D,"D");
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
-  show(A,dred); show(B,blue);
   }
 
+  
  //====================================================================== PART 9
-void showPart9(ARROW A, ARROW B) //
+void showPart9(ARROW ArrowLeft, ARROW ArrowRight) //
   {
-  PartTitle[9] = "nine?";
-
+  PartTitle[9] = "?";
+ 
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
-  show(A,dred); show(B,blue);
   }
 
 
@@ -296,9 +326,13 @@ void showPart9(ARROW A, ARROW B) //
 void myKeyPressed()
   {
   //int k = int(key); if(47<k && k<58) partShown=int(key)-48;
-  if(key=='<') {DucksRow.decrementCount(); }
-  if(key=='>') {DucksRow.incrementCount(); }
+  //if(key=='<') {DucksRow.decrementCount(); }
+  //if(key=='>') {DucksRow.incrementCount(); }
+  if(key=='<') MyFramesInAnimation=max(9,MyFramesInAnimation/2);
+  if(key=='>') MyFramesInAnimation*=2;
+  println(MyFramesInAnimation);
   }
+
   
 //======================= called when the mouse is dragged
 void myMouseDragged()

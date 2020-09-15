@@ -92,7 +92,7 @@ void keyPressed()  // executed each time a key is pressed: sets the Boolean "key
     if(key=='Q') showQuadGrid=!showQuadGrid;  // quit application
     //if(key=='R') 
     if(key=='S') ControlPoints.saveControlPointsToFile("data/pts");  // write current positions of points to file;    CURRENT
-    //if(key=='T') ;
+    if(key=='T') {currentFrame=0; currentTime=0; animate=false;}
     //if(key=='U') ;
     //if(key=='V') ;
     if(key=='W') showFaceWarp=!showFaceWarp;

@@ -212,7 +212,7 @@ class PNTS
   void swirlAroundScreenCenter(PNT M, PNT P) // scales all points wrt centroid G using distance change |GP| to |GM|
     {
     PNT C=ScreenCenter();
-    rotateAllPoints(angle(V(C,P),V(C,M)),C);
+    rotateAllPoints(angle(V(C,M),V(C,P)),C); 
     float m=d(C,M),p=d(C,P); 
     scaleAllPoints(m/p,C); 
     }

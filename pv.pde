@@ -23,7 +23,7 @@ class PNT
   PNT translate(float s, VCT V) {x += s*V.x; y += s*V.y; return this;}                 // P.add(s,V): P+=sV
   PNT translateTowardsPNT(float d, PNT F) {x+=d*(F.x-x);  y+=d*(F.y-y);  return this;};  // transalte by ratio s towards P
   PNT dilateWrtPNT(float s, PNT F) {x=F.x+s*(x-F.x); y=F.y+s*(y-F.y); return this;}    // P.scale(s,C): scales wrt C: P=L(C,P,s);
-  PNT rotateWrtPNT(float a, PNT F) {float dx=x-F.x, dy=y-F.y, c=cos(a), s=sin(a); x=F.x+c*dx-s*dy; y=F.y+s*dx+c*dy; return this;};   // P.rotate(a,G): rotate P around G by angle a in radians
+  PNT rotateWrtPNT(float a, PNT F) {float dx=x-F.x, dy=y-F.y, c=cos(a), s=sin(a); x=F.x+c*dx+s*dy; y=F.y-s*dx+c*dy; return this;};   // P.rotate(a,G): rotate P around G by angle a in radians
   PNT moveWithMouse() { x += mouseX-pmouseX; y += mouseY-pmouseY;  return this;}; 
 
   // for computing centroid of vertices or of polygons

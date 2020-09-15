@@ -188,9 +188,7 @@ void showArrow(ARROW A, color c) { fo(c,250); A.drawArrow();}
 void showArrow(ARROW A, int w, color c) { cwf(c,w,c); A.drawArrow();}
 void show(ARROW A, color c) { cWf(c,c); A.drawArrow(); cwF(c,2); A.drawWinding();}
 void show(ARROW A, int w, color c) { cwf(c,w,c); A.drawArrow(); noFill(); A.drawWinding();}
-void show(ARROW A) {A.drawArrow(); w(2); A.drawWinding();}
-void show(ARROW A, color c, String S) { cWf(c,c); show(A,S);}
-void show(ARROW A, String S) {A.drawArrow(); w(2); noFill(); A.drawWinding(); P(P(A.rP(),0.70,A.rV()),15,R(U(A.rV()))).label(S); }
+void show(ARROW A) {A.drawArrow(); w(2); noFill(); A.drawWinding();}
 
 ARROW ArrowLinearMorph(ARROW A0, ARROW A1, float t)
   {
@@ -257,14 +255,10 @@ ARROW NevilleThroughThreeArrows(float a, ARROW A, float b, ARROW B, float c, ARR
   }
 
 
-// New version of Lagrangem JUne 8
-
 ARROW TransformArrow(ARROW A, PNT F, float m, float w, float t) 
   {
-  VCT V = V(pow(m,t),R(A.rV(),t*w));  
   VCT FPo = V(F,A.rP());
   PNT P = P(F, V(pow(m,t),R(FPo,t*w)) );
-  //return Arrow(P,V);
   return Arrow(P,A.rm()*pow(m,t),A.ra()+(t*w));
   }
 
