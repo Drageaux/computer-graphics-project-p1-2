@@ -348,15 +348,12 @@ void showPart8(ARROW ArrowLeft, ARROW ArrowRight) //
   for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A050,B050,C050,D050,s));
   for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A075,B075,C075,D075,s));
   for(float s=0; s<1.01; s+=0.02) v(PointOnBezierCurve(A100,B100,C100,D100,s));
-  //for(float s=0.26; s<0.51; s+=0.02) v(PointOnBezierCurve(A,B,C,D,s));
-  //for(float s=0.51; s<0.76; s+=0.02) v(PointOnBezierCurve(A,B,C,D,s));
-  //for(float s=0.76; s<1.01; s+=0.02) v(PointOnBezierCurve(A,B,C,D,s));
   endShape();
   println("myTime: ", myTime);
   //show(drawBezierArrow(A025,B025,C025,D025,myTime),dgreen);
   if(0<=myTime && myTime<0.25) {
-    show(drawBezierArrow(A025,B025,C025,D025,myTime),dgreen);
   }
+    show(drawBezierArrow(A025,B025,C025,D025,myTime),dgreen);
   
   if(0.25<=myTime && myTime<0.50) {
     show(drawBezierArrow(A050,B050,C050,D050,myTime),dgreen);
