@@ -213,6 +213,15 @@ void showPart4(ARROW ArrowLeft, ARROW ArrowRight) // You may use a different sol
 void showPerspectiveSplitOfQuad(PNT A, PNT B, PNT C, PNT D, int rec)
   {
   // Please provide if you decide to have this as a solution for PHASE 2
+    PNT E = LineLineIntersection(A, B, C, D);
+    PNT F = LineLineIntersection(A, C, B, D);
+    PNT G = LineLineIntersection(B, C, E, F);
+    PNT H = LineLineIntersection(A, D, E, F);
+    show(G, H);
+    if(rec != 0){
+      showPerspectiveSplitOfQuad(A, B, G, H, rec-1);
+      showPerspectiveSplitOfQuad(H, G, C, D, rec-1);
+    }
   }
 
  //====================================================================== PART 5
