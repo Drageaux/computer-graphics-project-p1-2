@@ -396,19 +396,46 @@ ARROW  drawBezierArrow(PNT A, PNT B, PNT C, PNT D, float t)
 
   
  //====================================================================== PART 9
-void showPart9(ARROW ArrowLeft, ARROW ArrowRight) //
-  {
-  PartTitle[9] = "?";
+static int lissajousScale = 200;
+static float lissajousA = 3;
+static float lissajousB = 2;
+static float lissajousOffset = 500;
+static float lissajousDensity = 0.01;
+static float leftTailT = 331, leftHeadT = 283.5, rightHeadT = 588, rightTailT = 15;
+  
+void showPart9(ARROW ArrowLeft, ARROW ArrowRight) {
+  PartTitle[9] = "Lissajous Curve";
  
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
+  curve();
+  show(ArrowLeft,dred); show(ArrowRight,blue);
+  
+  float tailT = (rightTailT - leftTailT) * myTime + leftTailT;
+  float headT = (rightHeadT - leftHeadT) * myTime + leftHeadT;
+  PNT tail = P(getX(tailT), getY(tailT));
+  PNT head = P(getX(headT), getY(headT));
+  ARROW arrow = new ARROW(tail, head);
+  show(arrow, dred);
+}
+
+static float getX(float t) {
+  return lissajousScale * cos(t * lissajousA * lissajousDensity) + lissajousOffset;
+}
+
+static float getY(float t) {
+  return lissajousScale * sin(t * lissajousB * lissajousDensity) + lissajousOffset;
+}
+
+void curve() { 
+  strokeWeight(2);
+  beginShape();
+  for (int i = 1; i < 2000; i++) {
+    float x = getX(i);
+    float y = getY(i);
+    point(x, y);
   }
-
-
-
-
-
-
-
+  endShape();
+}
 
     
 //======================= called when a key is pressed
