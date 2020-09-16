@@ -63,7 +63,6 @@ void showMyProject(ARROW A, ARROW B) // four points used to define 3 vectors
       case 6: showPart6(A,B); break;
       case 7: showPart7(A,B); break;
       case 8: showPart8(A,B); break;
-      case 9: showPart9(A,B); break;
       }
     }
   }
@@ -318,13 +317,46 @@ ARROW ballSpinningMorph(ARROW A0, ARROW A1, float t){
 }
 
  //====================================================================== PART 7
-void showPart7(ARROW A, ARROW B) //
-  {
-  PartTitle[7] = "seven?";
-
+static int lissajousScale = 200;
+static float lissajousA = 3;
+static float lissajousB = 2;
+static float lissajousOffset = 500;
+static float lissajousDensity = 0.01;
+static float leftTailT = 331, leftHeadT = 283.5, rightHeadT = 588, rightTailT = 15;
+  
+void showPart7(ARROW ArrowLeft, ARROW ArrowRight) {
+  PartTitle[7] = "Lissajous Curve";
+ 
   guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
-  show(A,dred); show(B,blue);
+  curve();
+  show(ArrowLeft,dred); show(ArrowRight,blue);
+  
+  float tailT = (rightTailT - leftTailT) * myTime + leftTailT;
+  float headT = (rightHeadT - leftHeadT) * myTime + leftHeadT;
+  PNT tail = P(getX(tailT), getY(tailT));
+  PNT head = P(getX(headT), getY(headT));
+  ARROW arrow = new ARROW(tail, head);
+  show(arrow, dred);
+}
+
+static float getX(float t) {
+  return lissajousScale * cos(t * lissajousA * lissajousDensity) + lissajousOffset;
+}
+
+static float getY(float t) {
+  return lissajousScale * sin(t * lissajousB * lissajousDensity) + lissajousOffset;
+}
+
+void curve() { 
+  strokeWeight(2);
+  beginShape();
+  for (int i = 1; i < 2000; i++) {
+    float x = getX(i);
+    float y = getY(i);
+    point(x, y);
   }
+  endShape();
+}
 
  //====================================================================== PART 8
 void showPart8(ARROW ArrowLeft, ARROW ArrowRight) //
@@ -402,22 +434,6 @@ ARROW  drawBezierArrow(PNT A, PNT B, PNT C, PNT D, float t)
   ARROW arrow = Arrow(P, Pbcd);
   return arrow;                    
   }
-
-  
- //====================================================================== PART 9
-void showPart9(ARROW ArrowLeft, ARROW ArrowRight) //
-  {
-  PartTitle[9] = "?";
- 
-  guide="MyProject keys: '0' through '9' to select project, 'a' to start/stop animation ";
-  }
-
-
-
-
-
-
-
 
     
 //======================= called when a key is pressed
