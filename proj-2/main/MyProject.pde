@@ -61,6 +61,22 @@ Boolean
 
   live=true;   // updates mesh at each frame
 
+//************************************************************************
+//**** DISK CLASS
+//************************************************************************
+class DISK 
+  { 
+  PNT center;
+  VCT velocity;
+  color status;
+  VCT radius;
+  
+  // for debugging
+  DISK write() {print("Center: ("+center.x+","+center.y+"); Velocity: "+velocity+""); return this;};  // writes point coordinates in text window
+  
+  
+  } // end of DISK class
+
 //======================= my setup, executed once at the beginning 
 void mySetup()
   {
