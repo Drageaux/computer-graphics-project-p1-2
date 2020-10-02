@@ -69,6 +69,9 @@ void mySetup()
   DrawnPoints.empty(); // reset pont list P
   SmoothenedPoints.empty(); // reset pont list P
   //initDucklings(); // creates Ducling[] points
+  System.out.println("Hello");
+  
+  
   }
 
 //======================= called in main() and executed at each frame to redraw the canvas
@@ -179,6 +182,15 @@ void doStep4(PNTS MySites) //
   {
   titleOfStep[4] = "???";
   guide="My keys: '0'...'9' to activate/deactivate step";
+  //for (PNT p : MySites.G) {
+  //  System.out.println(p);
+  //}
+  //System.out.println(myTime);
+  //System.out.println("myCurrentFrame:" + myCurrentFrame);
+  //System.out.println("MyFramesInAnimation:" + MyFramesInAnimation);
+  // Phase A naive approach to find exact future collision time
+  // first, find time t to first collision
+  // for each disk, and for all its neighbors, find the closest neighbor
   }
 
  //====================================================================== PART 5
