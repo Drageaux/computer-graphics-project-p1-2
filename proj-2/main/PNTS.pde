@@ -13,7 +13,9 @@ class PNTS
   Boolean loop=false;                       // is a closed loop
 
   PNT[] G = new PNT [maxnv];                 // geometry table (vertices)
-
+  VCT[] movements = new VCT [maxnv];
+  float radius = 13;
+  
  // CREATE
 
 

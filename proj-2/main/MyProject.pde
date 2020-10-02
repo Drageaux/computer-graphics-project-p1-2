@@ -207,6 +207,14 @@ void doStep4(PNTS MySites) //
   // Phase A naive approach to find exact future collision time
   // first, find time t to first collision
   // for each disk, and for all its neighbors, find the closest neighbor
+    
+
+  for (int i = 0; i < Sites.G.length; i++) 
+    {
+    // save initial vectors/velocity
+    //Sites.movements[i] = V(random(-d,d),random(-d,d)); 
+    Sites.G[i].translate(Sites.movements[i]);
+    }
   }
 
  //====================================================================== PART 5
