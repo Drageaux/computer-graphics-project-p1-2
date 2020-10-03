@@ -196,24 +196,37 @@ void doStep3(PNTS MySites) //
  //====================================================================== PART 4
 void doStep4(PNTS MySites) //
   {
-  titleOfStep[4] = "???";
-  guide="My keys: '0'...'9' to activate/deactivate step";
-  //for (PNT p : MySites.G) {
-  //  System.out.println(p);
-  //}
-  //System.out.println(myTime);
-  //System.out.println("myCurrentFrame:" + myCurrentFrame);
-  //System.out.println("MyFramesInAnimation:" + MyFramesInAnimation);
-  // Phase A naive approach to find exact future collision time
-  // first, find time t to first collision
-  // for each disk, and for all its neighbors, find the closest neighbor
-    
-
-  for (int i = 0; i < Sites.G.length; i++) 
-    {
-    // save initial vectors/velocity
-    //Sites.movements[i] = V(random(-d,d),random(-d,d)); 
-    Sites.G[i].translate(Sites.movements[i]);
+    titleOfStep[4] = "???";
+    guide="My keys: '0'...'9' to activate/deactivate step";
+    //for (PNT p : MySites.G) {
+    //  System.out.println(p);
+    //}
+    //System.out.println(myTime);
+    //System.out.println("myCurrentFrame:" + myCurrentFrame);
+    //System.out.println("MyFramesInAnimation:" + MyFramesInAnimation);
+    // Phase A naive approach to find exact future collision time
+    // first, find time t to first collision
+    // for each disk, and for all its neighbors, find the closest neighbor
+      
+  
+    for (int i = 0; i < Sites.G.length; i++) {
+      // initial vectors/velocity 
+      Sites.G[i].translate(Sites.movements[i]);
+      for (int j = 0; j < Sites.G.length; j++) {
+        float smallestD = -1;
+        int nearestNeighborInd = -1;
+        if (i != j) {
+          if (smallestD < 0) {
+            nearestNeighborInd = j;
+            smallestD = d(Sites.G[i], Sites.G[nearestNeighborInd]);
+          } else if (smallestD > d(Sites.G[i], Sites.G[nearestNeighborInd])) {
+            nearestNeighborInd = j;
+            smallestD = d(Sites.G[i], Sites.G[nearestNeighborInd]);
+            Sites.movements[i] = null;
+          }
+        }
+        // after finding nearest neighbor
+      }
     }
   }
 
