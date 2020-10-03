@@ -216,19 +216,41 @@ void doStep4(PNTS MySites) //
       Sites.G[i].translate(Sites.movements[i]);
       for (int j = 0; j < Sites.pointCount; j++) {
         if (i != j && i == 90) {
-          float cTime = collisionTime(Sites.G[i], Sites.G[j], Sites.movements[i], Sites.movements[j], myTime);
-          if (cTime > -1){
+          
             
-            System.out.println("point " + i + " and point " + j);
-            System.out.println("collisionTime: " + cTime);
-            System.out.println("---------------");
-          }
+            //System.out.println("point " + i + " and point " + j);
+            
+            float ttc = ttc(Sites.G[i], Sites.G[j], Sites.movements[i], Sites.movements[j], myTime);
+            
+            //System.out.println(ttc + "\n---------------");
           
         }
         // after finding nearest neighbor
       }
     }
   }
+  
+float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float t){
+  float result = 0;
+  
+  float a = sq(v1.x-v2.x) + sq(v1.y-v2.y);
+  float b = 2 * ( (p1.x-p2.x)*(v1.x-v2.x) + (p1.y-p2.y)*(v1.y-v2.y) );
+  float c = sq(p1.x-p2.x) + sq(p1.y-p2.y) - sq(26);
+  
+  float test1 = (-b + sqrt(sq(b)-(4*a*c))) / (2*a);
+  float test2 = (-b - sqrt(sq(b)-(4*a*c))) / (2*a);
+  
+  System.out.println("test 1: " + test1);
+  System.out.println("test 2: " + test2);
+  if (test1 > 0){
+     return test1; 
+  } else if (test2 > 0){
+     return test2; 
+  }
+  
+  //System.out.println("no positive result");
+  return result;
+}
   
   
 /** 
