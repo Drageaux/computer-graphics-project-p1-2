@@ -207,7 +207,7 @@ void doStep4(PNTS MySites) //
     // first, find time t to first collision
     // for each disk, and for all its neighbors, find the closest neighbor
       
-    // w = 1/30 sec
+    //float w = 1/30 sec
     // 
     
     for (int i = 0; i < MySites.pointCount; i++) {
@@ -220,7 +220,7 @@ void doStep4(PNTS MySites) //
       int nextImpactIndex = -1;
       for (int j = 0; j < MySites.pointCount; j++) {
         if (i != j) {
-          float ttc = ttc(MySites.G[i], MySites.G[j], MySites.movements[i], MySites.movements[j]);
+          float ttc = ttc(MySites.G[i], MySites.G[j], MySites.movements[i], MySites.movements[j], 26);
           // replace default ttc of -1 with new ttc
           // otherwise check if new ttc is smaller than current smallest 
           if (smallestTtc == -1 || (ttc > -1 && smallestTtc > ttc)){
@@ -228,19 +228,23 @@ void doStep4(PNTS MySites) //
             nextImpactIndex = j;
           }          
         }
-        
       }
+      float ringTtc = ttc(MySites.G[i], ScreenCenter(), MySites.movements[i], V(), ringRadius - 13);
       // check if smallest TTC is positive
+      if (smallestTtc > ringTtc){
+          smallestTtc = ringTtc;
+          nextImpactIndex = 91;
+      }
       if (smallestTtc > 0 && nextImpactIndex > -1){
           System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
       }
     }
   }
   
-float ttc(PNT p1, PNT p2, VCT v1, VCT v2) {
+float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float radius) {
   float a = sq(v1.x-v2.x) + sq(v1.y-v2.y);
   float b = 2 * ( (p1.x-p2.x)*(v1.x-v2.x) + (p1.y-p2.y)*(v1.y-v2.y) );
-  float c = sq(p1.x-p2.x) + sq(p1.y-p2.y) - sq(26);
+  float c = sq(p1.x-p2.x) + sq(p1.y-p2.y) - sq(radius);
   
   float test1 = (-b + sqrt(sq(b)-(4*a*c))) / (2*a);
   float test2 = (-b - sqrt(sq(b)-(4*a*c))) / (2*a);
