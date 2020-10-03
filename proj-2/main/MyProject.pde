@@ -210,16 +210,17 @@ void doStep4(PNTS MySites) //
     // w = 1/30 sec
     // 
     
-  
-    for (int i = 0; i < Sites.pointCount; i++) {
-      // initial vectors/velocity 
+    for (int i = 0; i < MySites.pointCount; i++) {
       Sites.G[i].translate(Sites.movements[i]);
+    }
       
+    for (int i = 0; i < MySites.pointCount; i++) {
+      // initial vectors/velocity 
       float smallestTtc = -1;
       int nextImpactIndex = -1;
-      for (int j = 0; j < Sites.pointCount; j++) {
+      for (int j = 0; j < MySites.pointCount; j++) {
         if (i != j) {
-          float ttc = ttc(Sites.G[i], Sites.G[j], Sites.movements[i], Sites.movements[j], myTime);
+          float ttc = ttc(MySites.G[i], MySites.G[j], MySites.movements[i], MySites.movements[j], myTime);
           // replace default ttc of -1 with new ttc
           // otherwise check if new ttc is smaller than current smallest 
           if (smallestTtc == -1 || (ttc > -1 && smallestTtc > ttc)){
@@ -245,6 +246,12 @@ float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float t){
   float test1 = (-b + sqrt(sq(b)-(4*a*c))) / (2*a);
   float test2 = (-b - sqrt(sq(b)-(4*a*c))) / (2*a);
   
+  // if no negative
+  if (test1 > 0 && test2 > 0){
+    if (test1 < test2){return test1;}
+    else return test2;
+  }
+  // if 1 negative
   if (test1 > 0){
     //System.out.println("test 1: " + test1);
     return test1; 
