@@ -220,7 +220,7 @@ void doStep4(PNTS MySites) //
       int nextImpactIndex = -1;
       for (int j = 0; j < MySites.pointCount; j++) {
         if (i != j) {
-          float ttc = ttc(MySites.G[i], MySites.G[j], MySites.movements[i], MySites.movements[j], myTime);
+          float ttc = ttc(MySites.G[i], MySites.G[j], MySites.movements[i], MySites.movements[j]);
           // replace default ttc of -1 with new ttc
           // otherwise check if new ttc is smaller than current smallest 
           if (smallestTtc == -1 || (ttc > -1 && smallestTtc > ttc)){
