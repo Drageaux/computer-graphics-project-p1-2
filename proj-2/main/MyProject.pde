@@ -209,14 +209,14 @@ void doStep4(PNTS MySites) //
     // for each disk, and for all its neighbors, find the closest neighbor
       
   
-    for (int i = 0; i < Sites.G.length; i++) {
+    for (int i = 0; i < Sites.pointCount; i++) {
       // initial vectors/velocity 
       Sites.G[i].translate(Sites.movements[i]);
       for (int j = 0; j < Sites.G.length; j++) {
         float smallestD = -1;
         int nearestNeighborInd = -1;
         if (i != j) {
-          if (smallestD < 0) {
+          if (nearestNeighborInd < 0) {
             nearestNeighborInd = j;
             smallestD = d(Sites.G[i], Sites.G[nearestNeighborInd]);
           } else if (smallestD > d(Sites.G[i], Sites.G[nearestNeighborInd])) {

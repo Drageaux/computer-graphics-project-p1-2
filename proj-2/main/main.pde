@@ -56,7 +56,7 @@ void setup()               // executed once at the beginning
   //setPointsToArrows(ControlPoints);
   R=Sites;
   
-  for (int ind = 0; ind < Sites.G.length; ind++) {
+  for (int ind = 0; ind < Sites.pointCount; ind++) {
     // save initial vectors/velocity
     float randX = random(-5,5);
     float randY = random(-5,5);
