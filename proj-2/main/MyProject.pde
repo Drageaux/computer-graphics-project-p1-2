@@ -237,8 +237,7 @@ void doStep4(PNTS MySites) //
     }
   }
   
-float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float t){
-  
+float ttc(PNT p1, PNT p2, VCT v1, VCT v2) {
   float a = sq(v1.x-v2.x) + sq(v1.y-v2.y);
   float b = 2 * ( (p1.x-p2.x)*(v1.x-v2.x) + (p1.y-p2.y)*(v1.y-v2.y) );
   float c = sq(p1.x-p2.x) + sq(p1.y-p2.y) - sq(26);
