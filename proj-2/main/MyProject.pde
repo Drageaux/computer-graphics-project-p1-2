@@ -208,27 +208,22 @@ void doStep4(PNTS MySites) //
     // first, find time t to first collision
     // for each disk, and for all its neighbors, find the closest neighbor
       
+    // w = 1/30 sec
+    // 
   
     for (int i = 0; i < Sites.pointCount; i++) {
       // initial vectors/velocity 
       Sites.G[i].translate(Sites.movements[i]);
       for (int j = 0; j < Sites.G.length; j++) {
-        float smallestD = -1;
-        int nearestNeighborInd = -1;
         if (i != j) {
-          if (nearestNeighborInd < 0) {
-            nearestNeighborInd = j;
-            smallestD = d(Sites.G[i], Sites.G[nearestNeighborInd]);
-          } else if (smallestD > d(Sites.G[i], Sites.G[nearestNeighborInd])) {
-            nearestNeighborInd = j;
-            smallestD = d(Sites.G[i], Sites.G[nearestNeighborInd]);
-            Sites.movements[i] = null;
-          }
+          // get new points, then get new points
         }
         // after finding nearest neighbor
       }
     }
   }
+  
+
 
  //====================================================================== PART 5
 void doStep5(PNTS MySites) //
