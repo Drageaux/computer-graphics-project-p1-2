@@ -55,6 +55,13 @@ void setup()               // executed once at the beginning
   //loadControlArrows("data/arrows"+str(partShown)); 
   //setPointsToArrows(ControlPoints);
   R=Sites;
+  
+  for (int ind = 0; ind < Sites.pointCount; ind++) {
+    // save initial vectors/velocity
+    float randX = random(-5,5);
+    float randY = random(-5,5);
+    Sites.movements[ind] = V(randX,randY); 
+  }
   mySetup();
   
   } // end of setup
@@ -82,7 +89,6 @@ void draw()      // executed at each frame
   if(showQuadGrid) drawQuadGrid(50);
   if(showHexGrid) drawHexGrid(50);
   if(showKagomeGrid) drawKagomeGrid(50);
-
 
 
 

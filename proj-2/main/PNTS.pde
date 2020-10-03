@@ -9,11 +9,14 @@ class PNTS
   int pointCount=0;                                // number of vertices in the sequence
   int pv = 0;                              // picked vertex 
   int iv = 0;                              // insertion index 
-  int maxnv = 100*2*2*2*2*2*2*2*2;         //  max number of vertices
+  //int maxnv = 100*2*2*2*2*2*2*2*2;         //  max number of vertices
+  int maxnv = 100;         //  max number of vertices
   Boolean loop=false;                       // is a closed loop
 
   PNT[] G = new PNT [maxnv];                 // geometry table (vertices)
-
+  VCT[] movements = new VCT [maxnv];
+  float radius = 13;
+  
  // CREATE
 
 

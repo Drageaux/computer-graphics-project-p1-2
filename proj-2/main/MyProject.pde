@@ -196,18 +196,112 @@ void doStep3(PNTS MySites) //
  //====================================================================== PART 4
 void doStep4(PNTS MySites) //
   {
-  titleOfStep[4] = "???";
-  guide="My keys: '0'...'9' to activate/deactivate step";
-  //for (PNT p : MySites.G) {
-  //  System.out.println(p);
-  //}
-  //System.out.println(myTime);
-  //System.out.println("myCurrentFrame:" + myCurrentFrame);
-  //System.out.println("MyFramesInAnimation:" + MyFramesInAnimation);
-  // Phase A naive approach to find exact future collision time
-  // first, find time t to first collision
-  // for each disk, and for all its neighbors, find the closest neighbor
+    titleOfStep[4] = "???";
+    guide="My keys: '0'...'9' to activate/deactivate step";
+    //for (PNT p : MySites.G) {
+    //  System.out.println(p);
+    //}
+    //System.out.println(myTime);
+    //System.out.println("MyFramesInAnimation:" + MyFramesInAnimation);
+    // Phase A naive approach to find exact future collision time
+    // first, find time t to first collision
+    // for each disk, and for all its neighbors, find the closest neighbor
+      
+    // w = 1/30 sec
+    // 
+    
+    for (int i = 0; i < MySites.pointCount; i++) {
+      Sites.G[i].translate(Sites.movements[i]);
+    }
+      
+    for (int i = 0; i < MySites.pointCount; i++) {
+      // initial vectors/velocity 
+      float smallestTtc = -1;
+      int nextImpactIndex = -1;
+      for (int j = 0; j < MySites.pointCount; j++) {
+        if (i != j) {
+          float ttc = ttc(MySites.G[i], MySites.G[j], MySites.movements[i], MySites.movements[j], myTime);
+          // replace default ttc of -1 with new ttc
+          // otherwise check if new ttc is smaller than current smallest 
+          if (smallestTtc == -1 || (ttc > -1 && smallestTtc > ttc)){
+            smallestTtc = ttc;
+            nextImpactIndex = j;
+          }          
+        }
+        
+      }
+      // check if smallest TTC is positive
+      if (smallestTtc > 0 && nextImpactIndex > -1){
+          System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
+      }
+    }
   }
+  
+float ttc(PNT p1, PNT p2, VCT v1, VCT v2) {
+  float a = sq(v1.x-v2.x) + sq(v1.y-v2.y);
+  float b = 2 * ( (p1.x-p2.x)*(v1.x-v2.x) + (p1.y-p2.y)*(v1.y-v2.y) );
+  float c = sq(p1.x-p2.x) + sq(p1.y-p2.y) - sq(26);
+  
+  float test1 = (-b + sqrt(sq(b)-(4*a*c))) / (2*a);
+  float test2 = (-b - sqrt(sq(b)-(4*a*c))) / (2*a);
+  
+  // if no negative
+  if (test1 > 0 && test2 > 0){
+    if (test1 < test2){return test1;}
+    else return test2;
+  }
+  // if 1 negative
+  if (test1 > 0){
+    //System.out.println("test 1: " + test1);
+    return test1; 
+  } else if (test2 > 0){
+    //System.out.println("test 2: " + test2);
+    return test2; 
+  }
+  
+  //System.out.println("no positive result");
+  return -1;
+}
+  
+  
+/** 
+  return collision time if they will collide, else -1 if going farther apart
+*/
+float collisionTime(PNT p1, PNT p2, VCT v1, VCT v2, float t) {
+    
+    float result = 0;
+    
+    PNT newPnt1 = P(p1);
+    PNT newPnt2 = P(p2);
+    float currentDist = d(newPnt1, newPnt2);
+    
+        
+    //System.out.println("before calc " + currentDist);
+    if (currentDist <= 26) {
+      System.out.println("already collided");
+      return result; 
+    }
+        
+    while (currentDist > 26){
+        //System.out.println("before calc " + currentDist);
+        result += 1;
+        newPnt1 = P(newPnt1, 1, v1);
+        newPnt2 = P(newPnt2, 1, v2);
+    
+        if (d(newPnt1, newPnt2) > currentDist){
+          // moving farther apart
+          //System.out.println("moving farther apart " + d(newPnt1, newPnt2) + " > " + currentDist);
+          return -1; 
+        }
+        currentDist = d(newPnt1, newPnt2);
+        //System.out.println("after calc " + currentDist);
+        // just a rough estimation between 2 frames, not exact time yet
+       
+    }
+    
+    return result;
+}
+
 
  //====================================================================== PART 5
 void doStep5(PNTS MySites) //
