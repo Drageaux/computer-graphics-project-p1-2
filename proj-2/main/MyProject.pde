@@ -201,8 +201,7 @@ void doStep4(PNTS MySites) //
     //for (PNT p : MySites.G) {
     //  System.out.println(p);
     //}
-    //System.out.println(myTime);
-    //System.out.println("myCurrentFrame:" + myCurrentFrame);
+    System.out.println(myTime);
     //System.out.println("MyFramesInAnimation:" + MyFramesInAnimation);
     // Phase A naive approach to find exact future collision time
     // first, find time t to first collision
@@ -210,19 +209,70 @@ void doStep4(PNTS MySites) //
       
     // w = 1/30 sec
     // 
+    
   
     for (int i = 0; i < Sites.pointCount; i++) {
       // initial vectors/velocity 
       Sites.G[i].translate(Sites.movements[i]);
-      for (int j = 0; j < Sites.G.length; j++) {
+      for (int j = 0; j < Sites.pointCount; j++) {
         if (i != j) {
-          // get new points, then get new points
+          System.out.println("point " + i + " and point " + j);
+          System.out.println("collisionTime: " + collisionTime(Sites.G[i], Sites.G[j], Sites.movements[i], Sites.movements[j], myTime));
+          System.out.println("---------------");
+          
         }
         // after finding nearest neighbor
       }
     }
   }
   
+  
+/** 
+  return collision time if they will collide, else -1 if going farther apart
+*/
+float collisionTime(PNT p1, PNT p2, VCT v1, VCT v2, float t) {
+    // find d such that
+    float result = 0;
+    
+    PNT newPnt1 = P(p1);
+    PNT newPnt2 = P(p2);
+    float currentDist = d(newPnt1, newPnt2);
+    
+        
+    System.out.println("before calc " + currentDist);
+    if (currentDist <= 26) {
+      System.out.println("already collided");
+      return result; 
+    }
+    result += 1;
+    newPnt1 = P(newPnt1, result, v1);
+    newPnt2 = P(newPnt2, result, v2);
+    if (d(newPnt1, newPnt2) > currentDist){
+      // moving farther apart
+      return -1; 
+    }
+    
+    currentDist = d(newPnt1, newPnt2);
+        
+    while (currentDist > 26){
+        //System.out.println("before calc " + currentDist);
+        result += 1;
+        newPnt1 = P(newPnt1, result, v1);
+        newPnt2 = P(newPnt2, result, v2);
+    
+        if (d(newPnt1, newPnt2) > currentDist){
+          // moving farther apart
+          //System.out.println("moving farther apart " + d(newPnt1, newPnt2) + " > " + currentDist);
+          return -1; 
+        }
+        currentDist = d(newPnt1, newPnt2);
+        //System.out.println("after calc " + currentDist);
+        // just a rough estimation between 2 frames, not exact time yet
+       //return result/30;
+    }
+    
+    return result;
+}
 
 
  //====================================================================== PART 5
