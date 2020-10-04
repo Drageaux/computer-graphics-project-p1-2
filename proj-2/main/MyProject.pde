@@ -85,8 +85,6 @@ void mySetup()
   DrawnPoints.empty(); // reset pont list P
   SmoothenedPoints.empty(); // reset pont list P
   //initDucklings(); // creates Ducling[] points
-  System.out.println("Hello");
-  
   
   }
 
@@ -169,6 +167,12 @@ void doStep1(PNTS R) //
   //if(showEdges) {cw(dgreen,4); M.showNonBorderEdges(); cw(dred,8); M.showBorderEdges();}
   if(showVertices) M.showVertices(6);
   guide="My keys: '0'...'9' to activate/deactivate step";
+  
+  
+  //for (PNT i : M.G){
+    
+  //  i.write();
+  //}
   }
   
 //====================================================================== PART 2
@@ -236,7 +240,11 @@ void doStep4(PNTS MySites) //
           nextImpactIndex = 91;
       }
       if (smallestTtc > 0 && nextImpactIndex > -1){
-          System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
+        if (nextImpactIndex == 91){
+          System.out.println("smallest TTC for " + i + ": is with wall after " + smallestTtc + "s");
+        } else {
+           System.out.println("smallest TTC for " + i + ": is with " + nextImpactIndex + " after " + smallestTtc + "s");  
+        }
       }
     }
   }
