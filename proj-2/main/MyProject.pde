@@ -275,45 +275,7 @@ float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float radius) {
   return -1;
 }
   
-  
-/** 
-  return collision time if they will collide, else -1 if going farther apart
-*/
-float collisionTime(PNT p1, PNT p2, VCT v1, VCT v2, float t) {
-    
-    float result = 0;
-    
-    PNT newPnt1 = P(p1);
-    PNT newPnt2 = P(p2);
-    float currentDist = d(newPnt1, newPnt2);
-    
-        
-    //System.out.println("before calc " + currentDist);
-    if (currentDist <= 26) {
-      System.out.println("already collided");
-      return result; 
-    }
-        
-    while (currentDist > 26){
-        //System.out.println("before calc " + currentDist);
-        result += 1;
-        newPnt1 = P(newPnt1, 1, v1);
-        newPnt2 = P(newPnt2, 1, v2);
-    
-        if (d(newPnt1, newPnt2) > currentDist){
-          // moving farther apart
-          //System.out.println("moving farther apart " + d(newPnt1, newPnt2) + " > " + currentDist);
-          return -1; 
-        }
-        currentDist = d(newPnt1, newPnt2);
-        //System.out.println("after calc " + currentDist);
-        // just a rough estimation between 2 frames, not exact time yet
-       
-    }
-    
-    return result;
-}
-
+ 
 
  //====================================================================== PART 5
 void doStep5(PNTS MySites) //
