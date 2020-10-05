@@ -242,9 +242,9 @@ void doStep4(PNTS MySites) //
           if(nextImpactIndex <= 90){
             VCT collision_vector = V(MySites.G[i].x - MySites.G[nextImpactIndex].x, MySites.G[i].y-MySites.G[nextImpactIndex].y);
             collision_vector.write();
-            VCT collision_norm = V(collision_vector.divideBy(sq(collision_vector.norm()));
-            VCT i_normal = collision_vector.scaleBy(dot(MySites.movements[i], collision_norm)));
-            VCT j_normal = collision_vector.scaleBy(dot(MySites.movements[nextImpactIndex], collision_norm));
+            VCT collision_norm = V(collision_vector.divideBy(sq(collision_vector.norm())));
+            VCT i_normal = collision_norm.scaleBy(dot(MySites.movements[i], collision_norm));
+            VCT j_normal = collision_norm.scaleBy(dot(MySites.movements[nextImpactIndex], collision_norm));
             MySites.movements[i].setTo(MySites.movements[i].x-i_normal.x+j_normal.x, MySites.movements[i].y-i_normal.y+j_normal.y);
             MySites.movements[nextImpactIndex].setTo(MySites.movements[nextImpactIndex].x-j_normal.x+i_normal.x, MySites.movements[nextImpactIndex].y-j_normal.y+i_normal.y);
           }
