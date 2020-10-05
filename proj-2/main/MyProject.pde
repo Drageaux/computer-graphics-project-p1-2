@@ -207,7 +207,7 @@ void doStep4(PNTS MySites) //
     // first, find time t to first collision
     // for each disk, and for all its neighbors, find the closest neighbor
       
-    //float w = 1/30 sec
+    //float w = 1/30;
     // 
     
     for (int i = 0; i < MySites.pointCount; i++) {
@@ -217,6 +217,7 @@ void doStep4(PNTS MySites) //
     for (int i = 0; i < MySites.pointCount; i++) {
       // initial vectors/velocity 
       float smallestTtc = -1;
+      float w = 1/30;
       int nextImpactIndex = -1;
       for (int j = 0; j < MySites.pointCount; j++) {
         if (i != j) {
@@ -238,7 +239,22 @@ void doStep4(PNTS MySites) //
       if (smallestTtc > 0 && nextImpactIndex > -1){
           System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
       }
+      if (smallestTtc < w){
+        MySites.G[i].add(smallestTtc, MySites.movements[i]);
+        w = w - smallestTtc;
+        if(nextImpactIndex <= 90){
+          VCT collision_vector = V(MySites.G[i].x - MySites.G[nextImpactIndex].x, MySites.G[i].y-MySites.G[nextImpactIndex].y);
+          VCT i_normal = collision_vector.scaleBy(dot(MySites.movements[i], collision_vector.divideBy(sq(collision_vector.norm()))));
+          VCT j_normal = collision_vector.scaleBy(dot(MySites.movements[nextImpactIndex], collision_vector.divideBy(sq(collision_vector.norm()))));
+          MySites.movements[i].setTo(MySites.movements[i].x-i_normal.x+j_normal.x, MySites.movements[i].y-i_normal.y+j_normal.y);
+          MySites.movements[nextImpactIndex].setTo(MySites.movements[nextImpactIndex].x-i_normal.x+j_normal.x, MySites.movements[nextImpactIndex].y-i_normal.y+j_normal.y);
+        }
+      }
+      else{
+        MySites.G[i].add(w, MySites.movements[i]);
+      }
     }
+    
   }
   
 float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float radius) {
