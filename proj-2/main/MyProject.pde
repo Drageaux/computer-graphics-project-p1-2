@@ -246,8 +246,8 @@ void doStep4(PNTS MySites) //
         if (smallestTtc > -1 && nextImpactIndex > -1){
           if (smallestTtc < w){
         
-            System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
-            System.out.println("w is " + w);
+            //System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
+            //System.out.println("w is " + w);
             MySites.G[i].add(smallestTtc, MySites.movements[i]);
             w = w - smallestTtc;
             if(nextImpactIndex <= 90){
@@ -258,18 +258,17 @@ void doStep4(PNTS MySites) //
               
               //ARROW arrow = new ARROW(MySites.G[i], V(2, collision_norm));
               //show(arrow, blue);
-              
-              VCT i_normal = V(collision_norm.x *(dot(MySites.movements[i], collision_norm)), collision_norm.y *(dot(MySites.movements[i], collision_norm)));
-              VCT j_normal = V(collision_norm.x *(dot(MySites.movements[nextImpactIndex], collision_norm)), collision_norm.y *(dot(MySites.movements[nextImpactIndex], collision_norm)));
+              VCT i_normal = V(collision_norm.x * (dot(MySites.movements[i], collision_norm)), collision_norm.y * (dot(MySites.movements[i], collision_norm)));
+              VCT j_normal = V(collision_norm.x * (dot(MySites.movements[nextImpactIndex], collision_norm)), collision_norm.y * (dot(MySites.movements[nextImpactIndex], collision_norm)));
              
-              ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
-              show(inormalarr, orange);
-              ARROW jnormalarr = new ARROW(MySites.G[nextImpactIndex], V(1, j_normal));
-              show(jnormalarr, orange);
-              ARROW v1original = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
-              show(v1original, green);
-              ARROW v2original = new ARROW(MySites.G[nextImpactIndex], V(1, MySites.movements[nextImpactIndex]));
-              show(v2original, green);
+              //ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
+              //show(inormalarr, orange);
+              //ARROW jnormalarr = new ARROW(MySites.G[nextImpactIndex], V(1, j_normal));
+              //show(jnormalarr, orange);
+              //ARROW v1original = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+              //show(v1original, green);
+              //ARROW v2original = new ARROW(MySites.G[nextImpactIndex], V(1, MySites.movements[nextImpactIndex]));
+              //show(v2original, green);
               
               MySites.movements[i] = V(MySites.movements[i].x-i_normal.x+j_normal.x, MySites.movements[i].y-i_normal.y+j_normal.y);             
               MySites.movements[nextImpactIndex] = V(MySites.movements[nextImpactIndex].x-j_normal.x+i_normal.x, MySites.movements[nextImpactIndex].y-j_normal.y+i_normal.y);
@@ -281,11 +280,10 @@ void doStep4(PNTS MySites) //
               
             }
           
-          } else {
-            
-              
-            MySites.G[i].add(w, MySites.movements[i]);
           }
+          //ARROW v = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+          //show(v, red);
+          MySites.G[i].translate(w,MySites.movements[i]);
         }
       }
     }
