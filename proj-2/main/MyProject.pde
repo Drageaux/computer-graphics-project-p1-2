@@ -26,7 +26,7 @@ DUCKS DucksRow = new DUCKS(20);
 
 //**************************** My text  ****************************
 String title ="Class: 6491, Year: 2020, Project 02",            
-       name ="Student: MyFirstName MY-LAST-NAME";
+       name ="Students: Chen LIU, Thong NGUYEN, Nishit UNDALE";
 String subtitle = "Voronoi graph traversal";    
 String guide="MyProject keys: '0' through '9' to activate steps, 'a' to start/stop animation "; // help info
 
