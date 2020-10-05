@@ -211,7 +211,7 @@ void doStep4(PNTS MySites) //
     // 
     
     for (int i = 0; i < MySites.pointCount; i++) {
-      Sites.G[i].translate(Sites.movements[i]);
+      MySites.G[i].translate(MySites.movements[i]);
     }
       
     for (int i = 0; i < MySites.pointCount; i++) {
