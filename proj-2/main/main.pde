@@ -58,8 +58,8 @@ void setup()               // executed once at the beginning
   
   for (int ind = 0; ind < Sites.pointCount; ind++) {
     // save initial vectors/velocity
-    float randX = random(-5,5);
-    float randY = random(-5,5);
+    float randX = random(-100,100);
+    float randY = random(-100,100);
     Sites.movements[ind] = V(randX,randY); 
   }
   mySetup();
