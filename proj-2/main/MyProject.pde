@@ -231,7 +231,7 @@ void doStep4(PNTS MySites) //
       }
       
       
-      float w = 1./30;
+      float w = 1./MyFramesInAnimation;
       if (smallestTtc > -1 && nextImpactIndex > -1){
         if (smallestTtc < w){
       
