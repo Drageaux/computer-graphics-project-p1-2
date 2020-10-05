@@ -213,6 +213,7 @@ void doStep4(PNTS MySites) //
       
       
     for (int i = 0; i < MySites.pointCount; i++) {
+    
       // initial vectors/velocity 
       float smallestTtc = -1;
       int nextImpactIndex = -1;
@@ -242,7 +243,7 @@ void doStep4(PNTS MySites) //
       
       
         float w = 1./MyFramesInAnimation;
-        if (smallestTtc > -1 && nextImpactIndex > -1) {
+        if (smallestTtc > -1 && nextImpactIndex > -1){
           if (smallestTtc < w){
         
             System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
@@ -250,15 +251,27 @@ void doStep4(PNTS MySites) //
             MySites.G[i].add(smallestTtc, MySites.movements[i]);
             w = w - smallestTtc;
             if(nextImpactIndex <= 90){
-              VCT collision_vector = V(MySites.G[i].x - MySites.G[nextImpactIndex].x, MySites.G[i].y-MySites.G[nextImpactIndex].y);
+              VCT collision_vector = V(MySites.G[i].x - MySites.G[nextImpactIndex].x, MySites.G[i].y - MySites.G[nextImpactIndex].y);
               collision_vector.write();
-              VCT collision_norm = V(collision_vector.divideBy(sq(collision_vector.norm())));
-              VCT i_normal = collision_norm.scaleBy(dot(MySites.movements[i], collision_norm));
-              VCT j_normal = collision_norm.scaleBy(dot(MySites.movements[nextImpactIndex], collision_norm));
-              MySites.movements[i].setTo(MySites.movements[i].x-i_normal.x+j_normal.x, MySites.movements[i].y-i_normal.y+j_normal.y);
-              MySites.movements[nextImpactIndex].setTo(MySites.movements[nextImpactIndex].x-j_normal.x+i_normal.x, MySites.movements[nextImpactIndex].y-j_normal.y+i_normal.y);
+              
+              VCT collision_norm = V(collision_vector.x / (sq(collision_vector.norm())), collision_vector.y / (sq(collision_vector.norm())));
+              
+              ARROW arrow = new ARROW(MySites.G[i], V(2, collision_norm));
+              show(arrow, blue);
+              
+              VCT i_normal = V(collision_norm.scaleBy(dot(MySites.movements[i], collision_norm)));
+              VCT j_normal = V(collision_norm.scaleBy(dot(MySites.movements[nextImpactIndex], collision_norm)));
+              
+              
+              
+              MySites.movements[i].write();
+              MySites.movements[i] = V(MySites.movements[i].x-i_normal.x+j_normal.x, MySites.movements[i].y-i_normal.y+j_normal.y);
+              MySites.movements[i].write();
+              
+              MySites.movements[nextImpactIndex] = V(MySites.movements[nextImpactIndex].x-j_normal.x+i_normal.x, MySites.movements[nextImpactIndex].y-j_normal.y+i_normal.y);
+              
             }
-            
+          
           } else {
             MySites.G[i].add(w, MySites.movements[i]);
           }
