@@ -289,13 +289,13 @@ void doStep4(PNTS MySites) //
               //show(arrow, blue);
               VCT i_normal = V(collision_norm.x * (dot(MySites.movements[i], collision_norm)), collision_norm.y * (dot(MySites.movements[i], collision_norm)));
               VCT j_normal = V(i_normal.reverse());
-              //ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
-              //show(inormalarr, black);
-              //ARROW jnormalarr = new ARROW(MySites.G[nextImpactIndex], V(1, j_normal));
-              //show(jnormalarr, orange);
-              ARROW v1original = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
-              show(v1original, green);
-              MySites.movements[i] = V(MySites.movements[i].x-j_normal.x+i_normal.x, MySites.movements[i].y-j_normal.y+i_normal.y);
+              ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
+              show(inormalarr, black);
+              ARROW jnormalarr = new ARROW(MySites.G[i], V(1, j_normal));
+              show(jnormalarr, orange);
+              //ARROW v1original = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+              //show(v1original, green);
+              MySites.movements[i] = V(MySites.movements[i].x+i_normal.x+i_normal.x, MySites.movements[i].y+i_normal.y+i_normal.y);
               //ARROW v1after = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
               //show(v1after, red);
             }
