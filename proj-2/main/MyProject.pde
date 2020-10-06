@@ -238,7 +238,7 @@ void doStep4(PNTS MySites) //
         if (nextImpactIndex == 91){
           System.out.println("smallest TTC for " + i + ": is with wall after " + smallestTtc + "s");
         } else {
-           System.out.println("smallest TTC for " + i + ": is with " + nextImpactIndex + " after " + smallestTtc + "s");  
+           System.out.println("smallest TTC for " + i + ": is with " + nextImpactIndex + " after " + smallestTtc + "s");   //<>//
         }
       
       
@@ -301,8 +301,8 @@ void doStep4(PNTS MySites) //
             }
           
           }
-          ARROW v = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
-          show(v, red);
+          //ARROW v = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+          //show(v, red);
           MySites.G[i].translate(w,MySites.movements[i]);
         }
       }
@@ -364,8 +364,19 @@ float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float radius) {
  //====================================================================== PART 5
 void doStep5(PNTS MySites) //
   {
-  titleOfStep[5] = "???";
-  guide="My keys: '0'...'9' to activate/deactivate step";
+    titleOfStep[5] = "???";
+    guide="My keys: '0'...'9' to activate/deactivate step";
+    
+    for (int i = 0; i < M.V.length; i++){
+      
+    }
+    // test opposite.previous
+    // but if I don't have the opposite?
+    // x = c.p
+    // while (c.o != c) {
+    //   x = o.p
+    // }
+    // return x
   }
   
  //====================================================================== PART 6
