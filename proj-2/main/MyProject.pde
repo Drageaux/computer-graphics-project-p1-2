@@ -198,76 +198,92 @@ void doStep3(PNTS MySites) //
   }
 
  //====================================================================== PART 4
-void doStep4(PNTS MySites) //
-  {
-    titleOfStep[4] = "???";
-    guide="My keys: '0'...'9' to activate/deactivate step";
-    //for (PNT p : MySites.G) {
-    //  System.out.println(p);
-    //}
-    //System.out.println(myTime);
-    //System.out.println("MyFramesInAnimation:" + MyFramesInAnimation);
-    // Phase A naive approach to find exact future collision time
-    // first, find time t to first collision
-    // for each disk, and for all its neighbors, find the closest neighbor
-      
-      
-    for (int i = 0; i < MySites.pointCount; i++) {
-      // initial vectors/velocity 
-      float smallestTtc = -1;
-      int nextImpactIndex = -1;
-      for (int j = 0; j < MySites.pointCount; j++) {
-        if (i != j) {
-          float ttc = ttc(MySites.G[i], MySites.G[j], MySites.movements[i], MySites.movements[j], 26);
-          // replace default ttc of -1 with new ttc
-          // otherwise check if new ttc is smaller than current smallest 
-          if (smallestTtc == -1 || (ttc > -1 && smallestTtc > ttc)){
-            smallestTtc = ttc;
-            nextImpactIndex = j;
-          }          
+int pointCount = 91;
+
+void doStep4(PNTS centers) {
+  titleOfStep[4] = "???";
+  guide="My keys: '0'...'9' to activate/deactivate step";
+  // Phase A naive approach to find exact future collision time
+  // first, find time t to first collision
+  // for each disk, and for all its neighbors, find the closest neighbor
+  float frameEndTime = 1.0 / MyFramesInAnimation;
+  float renderedTime = 0.0;
+  
+  while (renderedTime < frameEndTime) {
+    // Find minimum ttc across all point pairs
+    float minTtc = Float.MAX_VALUE;
+    int impactDisk_i = -1, impactDisk_j = -1;
+    for (int i = 45; i < 46; i++) {
+      for (int j = 0; j < pointCount; j++) {
+        if (i == j) {
+          continue;
         }
-      }
-      float ringTtc = ttc(MySites.G[i], ScreenCenter(), MySites.movements[i], V(), ringRadius - 13);
-      // check if smallest TTC is positive
-      if (smallestTtc > ringTtc){
-          smallestTtc = ringTtc;
-          nextImpactIndex = 91;
-      }
-      if (smallestTtc > 0 && nextImpactIndex > -1){
-        if (nextImpactIndex == 91){
-          System.out.println("smallest TTC for " + i + ": is with wall after " + smallestTtc + "s");
-        } else {
-           System.out.println("smallest TTC for " + i + ": is with " + nextImpactIndex + " after " + smallestTtc + "s");  
-        }
-      
-      
-        float w = 1./MyFramesInAnimation;
-        if (smallestTtc > -1 && nextImpactIndex > -1) {
-          if (smallestTtc < w){
-        
-            System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
-            System.out.println("w is " + w);
-            MySites.G[i].add(smallestTtc, MySites.movements[i]);
-            w = w - smallestTtc;
-            if(nextImpactIndex <= 90){
-              VCT collision_vector = V(MySites.G[i].x - MySites.G[nextImpactIndex].x, MySites.G[i].y-MySites.G[nextImpactIndex].y);
-              collision_vector.write();
-              VCT collision_norm = V(collision_vector.divideBy(sq(collision_vector.norm())));
-              VCT i_normal = collision_norm.scaleBy(dot(MySites.movements[i], collision_norm));
-              VCT j_normal = collision_norm.scaleBy(dot(MySites.movements[nextImpactIndex], collision_norm));
-              MySites.movements[i].setTo(MySites.movements[i].x-i_normal.x+j_normal.x, MySites.movements[i].y-i_normal.y+j_normal.y);
-              MySites.movements[nextImpactIndex].setTo(MySites.movements[nextImpactIndex].x-j_normal.x+i_normal.x, MySites.movements[nextImpactIndex].y-j_normal.y+i_normal.y);
-            }
-            
-          } else {
-            MySites.G[i].add(w, MySites.movements[i]);
-          }
+        float ttc = ttc(centers.G[i], centers.G[j], centers.movements[i], centers.movements[j], 26);
+        if (ttc != -1 && ttc < minTtc) {
+          minTtc = ttc;
+          impactDisk_i = i;
+          impactDisk_j = j;
         }
       }
     }
+    
+    if (impactDisk_i == -1 || minTtc + renderedTime > frameEndTime) {
+      for (int i = 45; i < 46; i++) {
+        centers.G[i].add(frameEndTime - renderedTime, centers.movements[i]);
+      }
+      break;
+    } else {
+      for (int i = 45; i < 46; i++) {
+        centers.G[i].add(minTtc, centers.movements[i]);
+      }
+      renderedTime += minTtc;
+      
+      VCT collision_vector_j_to_i = V(centers.G[impactDisk_i].x - centers.G[impactDisk_j].x, //<>//
+                                      centers.G[impactDisk_i].y - centers.G[impactDisk_j].y);
+      VCT collision_vector_i_to_j = V(-1, collision_vector_j_to_i);
+      // Should have the same direction as normal component of velocity i
+      VCT collision_norm_i = V(1.0 / collision_vector_j_to_i.norm(), collision_vector_j_to_i);
+      // This could be the same or opposite of collision_norm_i
+      VCT collision_norm_j = V(collision_norm_i);
+      
+      if (dot(centers.movements[impactDisk_i], collision_norm_i) < 0) {
+        collision_norm_i = V(-1, collision_norm_i);
+      }
+      if (dot(centers.movements[impactDisk_j], collision_norm_j) < 0) {
+        collision_norm_j = V(-1, collision_norm_j);
+      }
+      
+      VCT i_normal = V(dot(centers.movements[impactDisk_i], collision_norm_i), collision_norm_i);
+      VCT j_normal = V(dot(centers.movements[impactDisk_j], collision_norm_j), collision_norm_j);
+      
+      VCT i_tangent = V(centers.movements[impactDisk_i], V(-1.0, i_normal));
+      VCT j_tangent = V(centers.movements[impactDisk_j], V(-1.0, j_normal));
+      
+      VCT new_i_vel = V(i_tangent, dot(collision_vector_j_to_i, j_normal) > 0 ? j_normal : V(-1, j_normal));
+      VCT new_j_vel = V(j_tangent, dot(collision_vector_i_to_j, i_normal) > 0 ? i_normal : V(-1, i_normal));
+      
+      centers.movements[impactDisk_i] = new_i_vel;
+      centers.movements[impactDisk_j] = new_j_vel;
+      
+      println("Collision! " + (System.currentTimeMillis() % 1000));
+    }
   }
   
+  for (int i = 0; i < pointCount; i++) {
+    ARROW arrow = new ARROW(centers.G[i], V(0.6, centers.movements[i]));
+    show(arrow, blue);
+  }
+}
+  
 float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float radius) {
+  // If their norm vectors are point away from each other, no way they are colliding
+  VCT collision_vector = V(p1.x - p2.x, p1.y - p2.y);
+  float norm1 = dot(v1, collision_vector);
+  float norm2 = dot(v2, collision_vector);
+  if ((norm1 < 0) != (norm2 < 0)) {
+    return -1;
+  }
+  
   float a = sq(v1.x-v2.x) + sq(v1.y-v2.y);
   float b = 2 * ( (p1.x-p2.x)*(v1.x-v2.x) + (p1.y-p2.y)*(v1.y-v2.y) );
   float c = sq(p1.x-p2.x) + sq(p1.y-p2.y) - sq(radius);

@@ -27,6 +27,14 @@ int currentFrame=0; // frame to advance timing
 int framesInAnimation=360; // intermediate frames for the whole animation 
 boolean easeInOut=true;
 float ringRadius=1;
+
+void settings() {
+  // Fixes "Profile GL4bc not available" error on my computer
+  System.setProperty("jogl.disable.openglcore", "true");
+  size(1000, 1000, P2D);
+}
+
+
 //**************************** initialization ****************************
 void setup()               // executed once at the beginning 
   {
