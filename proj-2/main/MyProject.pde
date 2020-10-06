@@ -252,7 +252,7 @@ void doStep4(PNTS MySites) //
             w = w - smallestTtc;
             if(nextImpactIndex <= 90){
               VCT collision_vector = V(MySites.G[i].x - MySites.G[nextImpactIndex].x, MySites.G[i].y - MySites.G[nextImpactIndex].y);
-              collision_vector.write();
+              //collision_vector.write();
               
               VCT collision_norm = V(collision_vector.x / collision_vector.norm(), collision_vector.y / collision_vector.norm());
               
@@ -278,6 +278,24 @@ void doStep4(PNTS MySites) //
               //ARROW v2after = new ARROW(MySites.G[nextImpactIndex], V(1, MySites.movements[nextImpactIndex]));
               //show(v2after, red);
               
+            }
+            else{
+              VCT collision_vector = V(MySites.G[i].x - ScreenCenter().x, MySites.G[i].y - ScreenCenter().y);
+              collision_vector.write();
+              VCT collision_norm = V(collision_vector.x / collision_vector.norm(), collision_vector.y / collision_vector.norm());
+              //ARROW arrow = new ARROW(MySites.G[i], V(2, collision_norm));
+              //show(arrow, blue);
+              VCT i_normal = V(collision_norm.x * (dot(MySites.movements[i], collision_norm)), collision_norm.y * (dot(MySites.movements[i], collision_norm)));
+              VCT j_normal = V(i_normal.reverse());
+              //ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
+              //show(inormalarr, black);
+              //ARROW jnormalarr = new ARROW(MySites.G[nextImpactIndex], V(1, j_normal));
+              //show(jnormalarr, orange);
+              ARROW v1original = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+              show(v1original, green);
+              MySites.movements[i] = V(MySites.movements[i].x-j_normal.x+i_normal.x, MySites.movements[i].y-j_normal.y+i_normal.y);
+              //ARROW v1after = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+              //show(v1after, red);
             }
           
           }
