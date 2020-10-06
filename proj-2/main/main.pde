@@ -43,8 +43,8 @@ void setup()               // executed once at the beginning
 
   frameRate(30);             // render 30 frames per second
   smooth();                  // turn on antialiasing for drawing curves
-  //PictureOfMyFace = loadImage("data/pic.jpg");  // load image from file pic.jpg in folder data *** replace that file with your pic of your own face
-  PictureOfMyFace = loadImage("data/JR.jpg");  // load image from file JR.jpg in folder data *** replace that file with your pic of your own face
+  PictureOfMyFace = loadImage("data/pic.jpg");  // load image from file pic.jpg in folder data *** replace that file with your pic of your own face
+  //PictureOfMyFace = loadImage("data/JR.jpg");  // load image from file JR.jpg in folder data *** replace that file with your pic of your own face
   PictureOfBanner = loadImage("data/GTbanner.jpg");  // load image from file GTbanner.jpg in folder data *** replace that file with your pic of your own face
   Sites.declare(); // declares all ControlPoints. MUST BE DONE BEFORE ADDING POINTS 
   ringRadius=0.4*width;
@@ -65,8 +65,8 @@ void setup()               // executed once at the beginning
   
   for (int ind = 0; ind < Sites.pointCount; ind++) {
     // save initial vectors/velocity
-    float randX = random(-5,5);
-    float randY = random(-5,5);
+    float randX = random(-100,100);
+    float randY = random(-100,100);
     Sites.movements[ind] = V(randX,randY); 
   }
   mySetup();

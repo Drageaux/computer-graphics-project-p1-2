@@ -26,7 +26,7 @@ DUCKS DucksRow = new DUCKS(20);
 
 //**************************** My text  ****************************
 String title ="Class: 6491, Year: 2020, Project 02",            
-       name ="Student: MyFirstName MY-LAST-NAME";
+       name ="Students: Chen LIU, Thong NGUYEN, Nishit UNDALE";
 String subtitle = "Voronoi graph traversal";    
 String guide="MyProject keys: '0' through '9' to activate steps, 'a' to start/stop animation "; // help info
 
@@ -85,8 +85,6 @@ void mySetup()
   DrawnPoints.empty(); // reset pont list P
   SmoothenedPoints.empty(); // reset pont list P
   //initDucklings(); // creates Ducling[] points
-  System.out.println("Hello");
-  
   
   }
 
@@ -169,6 +167,12 @@ void doStep1(PNTS R) //
   //if(showEdges) {cw(dgreen,4); M.showNonBorderEdges(); cw(dred,8); M.showBorderEdges();}
   if(showVertices) M.showVertices(6);
   guide="My keys: '0'...'9' to activate/deactivate step";
+  
+  
+  //for (PNT i : M.G){
+    
+  //  i.write();
+  //}
   }
   
 //====================================================================== PART 2
@@ -207,14 +211,9 @@ void doStep4(PNTS MySites) //
     // first, find time t to first collision
     // for each disk, and for all its neighbors, find the closest neighbor
       
-    //float w = 1/30 sec
-    // 
-    
-    for (int i = 0; i < MySites.pointCount; i++) {
-      Sites.G[i].translate(Sites.movements[i]);
-    }
       
     for (int i = 0; i < MySites.pointCount; i++) {
+    
       // initial vectors/velocity 
       float smallestTtc = -1;
       int nextImpactIndex = -1;
@@ -236,10 +235,103 @@ void doStep4(PNTS MySites) //
           nextImpactIndex = 91;
       }
       if (smallestTtc > 0 && nextImpactIndex > -1){
-          System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
+        if (nextImpactIndex == 91){
+          System.out.println("smallest TTC for " + i + ": is with wall after " + smallestTtc + "s");
+        } else {
+           System.out.println("smallest TTC for " + i + ": is with " + nextImpactIndex + " after " + smallestTtc + "s");   //<>//
+        }
+      
+      
+        float w = 1./MyFramesInAnimation;
+        if (smallestTtc > -1 && nextImpactIndex > -1){
+          if (smallestTtc < w){
+        
+            //System.out.println("smallest TTC for " + i + ": is " + nextImpactIndex + " after " + smallestTtc + "s");
+            //System.out.println("w is " + w);
+            MySites.G[i].add(smallestTtc, MySites.movements[i]);
+            w = w - smallestTtc;
+            if(nextImpactIndex <= 90){
+
+              VCT collision_vector = V(MySites.G[i].x - MySites.G[nextImpactIndex].x, MySites.G[i].y - MySites.G[nextImpactIndex].y);
+              //collision_vector.write();
+              
+              VCT collision_norm = V(collision_vector.x / collision_vector.norm(), collision_vector.y / collision_vector.norm());
+              
+              //ARROW arrow = new ARROW(MySites.G[i], V(2, collision_norm));
+              //show(arrow, blue);
+              VCT i_normal = V(collision_norm.x * (dot(MySites.movements[i], collision_norm)), collision_norm.y * (dot(MySites.movements[i], collision_norm)));
+              VCT j_normal = V(collision_norm.x * (dot(MySites.movements[nextImpactIndex], collision_norm)), collision_norm.y * (dot(MySites.movements[nextImpactIndex], collision_norm)));
+             
+              //ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
+              //show(inormalarr, orange);
+              //ARROW jnormalarr = new ARROW(MySites.G[nextImpactIndex], V(1, j_normal));
+              //show(jnormalarr, orange);
+              //ARROW v1original = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+              //show(v1original, green);
+              //ARROW v2original = new ARROW(MySites.G[nextImpactIndex], V(1, MySites.movements[nextImpactIndex]));
+              //show(v2original, green);
+              
+              MySites.movements[i] = V(MySites.movements[i].x-i_normal.x+j_normal.x, MySites.movements[i].y-i_normal.y+j_normal.y);             
+              MySites.movements[nextImpactIndex] = V(MySites.movements[nextImpactIndex].x-j_normal.x+i_normal.x, MySites.movements[nextImpactIndex].y-j_normal.y+i_normal.y);
+
+              
+              //ARROW v1after = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+              //show(v1after, red);
+              //ARROW v2after = new ARROW(MySites.G[nextImpactIndex], V(1, MySites.movements[nextImpactIndex]));
+              //show(v2after, red);
+              
+            }
+            else{
+              VCT collision_vector = V(MySites.G[i].x - ScreenCenter().x, MySites.G[i].y - ScreenCenter().y);
+              collision_vector.write();
+              VCT collision_norm = V(collision_vector.x / collision_vector.norm(), collision_vector.y / collision_vector.norm());
+              //ARROW arrow = new ARROW(MySites.G[i], V(2, collision_norm));
+              //show(arrow, blue);
+              VCT i_normal = V(collision_norm.x * (dot(MySites.movements[i], collision_norm)), collision_norm.y * (dot(MySites.movements[i], collision_norm)));
+              VCT j_normal = V(i_normal.reverse());
+              ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
+              show(inormalarr, black);
+              ARROW jnormalarr = new ARROW(MySites.G[i], V(1, j_normal));
+              show(jnormalarr, orange);
+              //ARROW v1original = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+              //show(v1original, green);
+              MySites.movements[i] = V(MySites.movements[i].x+i_normal.x+i_normal.x, MySites.movements[i].y+i_normal.y+i_normal.y);
+              //ARROW v1after = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+              //show(v1after, red);
+            }
+          
+          }
+          //ARROW v = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+          //show(v, red);
+          MySites.G[i].translate(w,MySites.movements[i]);
+        }
       }
     }
   }
+
+void updateCollision(PNTS MySites, int i, int j){
+    VCT collision_vector = V(MySites.G[i].x - MySites.G[j].x, MySites.G[i].y - MySites.G[j].y);
+    collision_vector.write();
+    
+    VCT collision_norm = V(collision_vector.x / collision_vector.norm(), collision_vector.y / collision_vector.norm());
+    
+    //ARROW arrow = new ARROW(MySites.G[i], V(2, collision_norm));
+    //show(arrow, blue);
+    VCT i_normal = V(collision_norm.x * (dot(MySites.movements[i], collision_norm)), collision_norm.y * (dot(MySites.movements[i], collision_norm)));
+    VCT j_normal = V(collision_norm.x * (dot(MySites.movements[j], collision_norm)), collision_norm.y * (dot(MySites.movements[j], collision_norm)));
+   
+    //ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
+    //show(inormalarr, orange);
+    //ARROW jnormalarr = new ARROW(MySites.G[nextImpactIndex], V(1, j_normal));
+    //show(jnormalarr, orange);
+    //ARROW v1original = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
+    //show(v1original, green);
+    //ARROW v2original = new ARROW(MySites.G[nextImpactIndex], V(1, MySites.movements[nextImpactIndex]));
+    //show(v2original, green);
+    
+    MySites.movements[i] = V(MySites.movements[i].x-i_normal.x+j_normal.x, MySites.movements[i].y-i_normal.y+j_normal.y);             
+    MySites.movements[j] = V(MySites.movements[j].x-j_normal.x+i_normal.x, MySites.movements[j].y-j_normal.y+i_normal.y);
+}
   
 float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float radius) {
   float a = sq(v1.x-v2.x) + sq(v1.y-v2.y);
@@ -255,10 +347,10 @@ float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float radius) {
     else return test2;
   }
   // if 1 negative
-  if (test1 > 0){
+  if (test1 > 0 && test2 < 0){
     //System.out.println("test 1: " + test1);
     return test1; 
-  } else if (test2 > 0){
+  } else if (test2 > 0 && test1 < 0){
     //System.out.println("test 2: " + test2);
     return test2; 
   }
@@ -267,51 +359,24 @@ float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float radius) {
   return -1;
 }
   
-  
-/** 
-  return collision time if they will collide, else -1 if going farther apart
-*/
-float collisionTime(PNT p1, PNT p2, VCT v1, VCT v2, float t) {
-    
-    float result = 0;
-    
-    PNT newPnt1 = P(p1);
-    PNT newPnt2 = P(p2);
-    float currentDist = d(newPnt1, newPnt2);
-    
-        
-    //System.out.println("before calc " + currentDist);
-    if (currentDist <= 26) {
-      System.out.println("already collided");
-      return result; 
-    }
-        
-    while (currentDist > 26){
-        //System.out.println("before calc " + currentDist);
-        result += 1;
-        newPnt1 = P(newPnt1, 1, v1);
-        newPnt2 = P(newPnt2, 1, v2);
-    
-        if (d(newPnt1, newPnt2) > currentDist){
-          // moving farther apart
-          //System.out.println("moving farther apart " + d(newPnt1, newPnt2) + " > " + currentDist);
-          return -1; 
-        }
-        currentDist = d(newPnt1, newPnt2);
-        //System.out.println("after calc " + currentDist);
-        // just a rough estimation between 2 frames, not exact time yet
-       
-    }
-    
-    return result;
-}
-
+ 
 
  //====================================================================== PART 5
 void doStep5(PNTS MySites) //
   {
-  titleOfStep[5] = "???";
-  guide="My keys: '0'...'9' to activate/deactivate step";
+    titleOfStep[5] = "???";
+    guide="My keys: '0'...'9' to activate/deactivate step";
+    
+    for (int i = 0; i < M.V.length; i++){
+      
+    }
+    // test opposite.previous
+    // but if I don't have the opposite?
+    // x = c.p
+    // while (c.o != c) {
+    //   x = o.p
+    // }
+    // return x
   }
   
  //====================================================================== PART 6

@@ -55,7 +55,7 @@ class MESH
   PNT cg(int c) {return P(0.6,g(c),0.2,g(p(c)),0.2,g(n(c)));}   // computes offset location of point at corner c
 
   boolean nb(int c) {return(O[c]!=c);};  // not a border corner
-  boolean bord(int c) {return(O[c]==c);};  // not a border corner
+  boolean bord(int c) {return(O[c]==c);};  // a border corner
 
   // CURRENT CORNER OPERATORS
   void next() {c=n(c);}
