@@ -4,6 +4,11 @@
 // Project title: ??
 // Student(s):
 
+import java.util.Map;
+import java.util.Set;
+import java.util.HashMap;
+import java.util.HashSet;
+
 //======================= My global variables
 PImage PictureOfMyFace; // picture of author's face, should be: data/pic.jpg in sketch folder
 PImage PictureOfBanner; // picture of banner, should be: data/pic.jpg in sketch folder
@@ -18,6 +23,7 @@ int partShown = 0;
 int MyFramesInAnimation=63;
 int myCurrentFrame=0; // counting frames for animating my arrow morphs 
 float myTime=0; // my time for animating my arrow morphs 
+float timeInStep5 = 0;
 
 int numberOfParts = titleOfStep.length;
 PNTS DrawnPoints = new PNTS(); // class containing array of points, used to standardize GUI
@@ -86,6 +92,8 @@ void mySetup()
   SmoothenedPoints.empty(); // reset pont list P
   //initDucklings(); // creates Ducling[] points
   
+  infected.add(45);
+  timeOfCollision.put(45, 0.0);
   }
 
 //======================= called in main() and executed at each frame to redraw the canvas
@@ -93,7 +101,14 @@ void showMyProject(PNTS MySites) // four points used to define 3 vectors
   {
   if(myCurrentFrame==MyFramesInAnimation) myCurrentFrame=0;
   myTime = (float)myCurrentFrame++/MyFramesInAnimation;
-  if(easeInOut) myTime = easeInOut(0,0.5,1,myTime);    
+  if(easeInOut) myTime = easeInOut(0,0.5,1,myTime);
+  
+  if (step5) {
+    timeInStep5 += 1.0 / MyFramesInAnimation;
+  } else {
+    timeInStep5 = 0;
+  }
+      
 
   if(live)
     {
@@ -238,7 +253,7 @@ void doStep4(PNTS MySites) //
         if (nextImpactIndex == 91){
           System.out.println("smallest TTC for " + i + ": is with wall after " + smallestTtc + "s");
         } else {
-           System.out.println("smallest TTC for " + i + ": is with " + nextImpactIndex + " after " + smallestTtc + "s");   //<>//
+           System.out.println("smallest TTC for " + i + ": is with " + nextImpactIndex + " after " + smallestTtc + "s");  
         }
       
       
@@ -289,10 +304,10 @@ void doStep4(PNTS MySites) //
               //show(arrow, blue);
               VCT i_normal = V(collision_norm.x * (dot(MySites.movements[i], collision_norm)), collision_norm.y * (dot(MySites.movements[i], collision_norm)));
               VCT j_normal = V(i_normal.reverse());
-              ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
-              show(inormalarr, black);
-              ARROW jnormalarr = new ARROW(MySites.G[i], V(1, j_normal));
-              show(jnormalarr, orange);
+              //ARROW inormalarr = new ARROW(MySites.G[i], V(1, i_normal));
+              //show(inormalarr, black);
+              //ARROW jnormalarr = new ARROW(MySites.G[i], V(1, j_normal));
+              //show(jnormalarr, orange);
               //ARROW v1original = new ARROW(MySites.G[i], V(1, MySites.movements[i]));
               //show(v1original, green);
               MySites.movements[i] = V(MySites.movements[i].x+i_normal.x+i_normal.x, MySites.movements[i].y+i_normal.y+i_normal.y);
@@ -362,22 +377,121 @@ float ttc(PNT p1, PNT p2, VCT v1, VCT v2, float radius) {
  
 
  //====================================================================== PART 5
+Set<Integer> infected = new HashSet<Integer>();
+Map<Integer, Float> timeOfCollision = new HashMap<Integer, Float>();
+float C = 1.0;
+float S = 1.5;
+float I = 10.0;
+float p0 = 0.8;
+float p1 = 0.01;
+float N = 5;
+float T = 0.5;
+
 void doStep5(PNTS MySites) //
   {
-    titleOfStep[5] = "???";
+    titleOfStep[5] = "Virus Spreading and Contact Tracing";
     guide="My keys: '0'...'9' to activate/deactivate step";
     
-    for (int i = 0; i < M.V.length; i++){
-      
+    for (int i = 0; i < MySites.pointCount; i++) {
+    
+      // initial vectors/velocity 
+      float smallestTtc = -1;
+      int nextImpactIndex = -1;
+      for (int j = 0; j < MySites.pointCount; j++) {
+        if (i != j) {
+          float ttc = ttc(MySites.G[i], MySites.G[j], MySites.movements[i], MySites.movements[j], 26);
+          // replace default ttc of -1 with new ttc
+          // otherwise check if new ttc is smaller than current smallest 
+          if (smallestTtc == -1 || (ttc > -1 && smallestTtc > ttc)){
+            smallestTtc = ttc;
+            nextImpactIndex = j;
+          }          
+        }
+      }
+      float ringTtc = ttc(MySites.G[i], ScreenCenter(), MySites.movements[i], V(), ringRadius - 13);
+      // check if smallest TTC is positive
+      if (smallestTtc > ringTtc){
+          smallestTtc = ringTtc;
+          nextImpactIndex = 91;
+      }
+      if (smallestTtc > 0 && nextImpactIndex > -1){
+
+        float w = 1./MyFramesInAnimation;
+        if (smallestTtc > -1 && nextImpactIndex > -1){
+          if (smallestTtc < w){
+            MySites.G[i].add(smallestTtc, MySites.movements[i]);
+            w = w - smallestTtc;
+            if(nextImpactIndex <= 90){
+
+              VCT collision_vector = V(MySites.G[i].x - MySites.G[nextImpactIndex].x, MySites.G[i].y - MySites.G[nextImpactIndex].y);
+              VCT collision_norm = V(collision_vector.x / collision_vector.norm(), collision_vector.y / collision_vector.norm());
+              
+              VCT i_normal = V(collision_norm.x * (dot(MySites.movements[i], collision_norm)), collision_norm.y * (dot(MySites.movements[i], collision_norm)));
+              VCT j_normal = V(collision_norm.x * (dot(MySites.movements[nextImpactIndex], collision_norm)), collision_norm.y * (dot(MySites.movements[nextImpactIndex], collision_norm)));
+             
+              MySites.movements[i] = V(MySites.movements[i].x-i_normal.x+j_normal.x, MySites.movements[i].y-i_normal.y+j_normal.y);             
+              MySites.movements[nextImpactIndex] = V(MySites.movements[nextImpactIndex].x-j_normal.x+i_normal.x, MySites.movements[nextImpactIndex].y-j_normal.y+i_normal.y);
+              
+              // Update contagious status of disks
+              int spreader = i;
+              int receiver = nextImpactIndex;
+              if (!isSpreader(spreader) && isSpreader(receiver)) {
+                int tmp = receiver;
+                receiver = spreader;
+                spreader = tmp;
+              }
+              
+              // If one is a spreader and the other has never been infected, can spread
+              if (isSpreader(spreader) && !infected.contains(receiver)) {
+                if (random(0.0, 1.0) < p0) {
+                  infected.add(receiver);
+                  timeOfCollision.put(receiver, timeInStep5);
+                }
+              }
+              
+            }
+            else{
+              VCT collision_vector = V(MySites.G[i].x - ScreenCenter().x, MySites.G[i].y - ScreenCenter().y);
+              //collision_vector.write();
+              VCT collision_norm = V(collision_vector.x / collision_vector.norm(), collision_vector.y / collision_vector.norm());
+              VCT i_normal = V(collision_norm.x * (dot(MySites.movements[i], collision_norm)), collision_norm.y * (dot(MySites.movements[i], collision_norm)));
+              VCT j_normal = V(i_normal.reverse());
+              MySites.movements[i] = V(MySites.movements[i].x+i_normal.x+i_normal.x, MySites.movements[i].y+i_normal.y+i_normal.y);
+            }
+          
+          }
+          MySites.G[i].translate(w,MySites.movements[i]);
+        }
+      }
     }
-    // test opposite.previous
-    // but if I don't have the opposite?
-    // x = c.p
-    // while (c.o != c) {
-    //   x = o.p
-    // }
-    // return x
+    
+    for (int i = 0; i < 91; i++) { //<>//
+      if (infected.contains(i)) {
+        float t = timeInStep5 - timeOfCollision.get(i);
+        if (t < C) {
+          // Not yet contagious
+          showWithColor(MySites.G[i], 13, grey);
+        } else if (t > C && t < S) {
+          // Contagious, but not yet symptomatic
+          showWithColor(MySites.G[i], 13, yellow);
+        } else if (t >= S && t < C + I) {
+          // Symptomatic
+          showWithColor(MySites.G[i], 13, red);
+        } else if (t > C + I) {
+          // Immune
+          showWithColor(MySites.G[i], 13, green);
+        }
+      }
+    }
   }
+  
+boolean isSpreader(int i) {
+  if (!infected.contains(i)) {
+    return false;
+  }
+  float t = timeInStep5 - timeOfCollision.get(i);
+  return t > C && t < C + I;
+}
   
  //====================================================================== PART 6
 void doStep6(PNTS MySites) //

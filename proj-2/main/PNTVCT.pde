@@ -148,7 +148,13 @@ PNT P(float a, PNT A, float b, PNT B, float c, PNT C) {return P(a*A.x+b*B.x+c*C.
 PNT P(float a, PNT A, float b, PNT B, float c, PNT C, float d, PNT D){return P(a*A.x+b*B.x+c*C.x+d*D.x,a*A.y+b*B.y+c*C.y+d*D.y);} // aA+bB+cC+dD (assumes a+b+c+d=1)
      
 // display 
-void show(PNT P, float r) {ellipse(P.x, P.y, 2*r, 2*r);};                                               // draws circle of center r around P
+void show(PNT P, float r) {
+  ellipse(P.x, P.y, 2*r, 2*r);
+};                                               // draws circle of center r around P
+void showWithColor(PNT P, float r, int rgb) {
+  fill(rgb);
+  ellipse(P.x, P.y, 2*r, 2*r);
+};
 void show(PNT P) {ellipse(P.x, P.y, 6,6);};                                                             // draws small circle around point
 void label(PNT P, String S) {text(S, P.x,P.y); }                                                         // writes string S next to P on the screen ( for example label(P[i],str(i));)
 void circledLabel(PNT P, String S) {P.circledLabel(S);}                                                         // writes string S next to P on the screen ( for example label(P[i],str(i));)
